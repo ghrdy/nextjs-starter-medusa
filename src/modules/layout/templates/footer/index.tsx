@@ -15,10 +15,10 @@ export default async function Footer() {
   return (
     <footer className="border-t border-ui-border-base w-full">
       <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
+        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-20">
           <div className="w-full xsmall:w-auto flex justify-center xsmall:justify-start items-center">
             <LocalizedClientLink href="/" className="hover:text-ui-fg-base">
-              <div className="h-48 sm:h-40 relative w-[260px] sm:w-[32rem] z-10 flex items-center justify-center">
+              <div className="h-32 sm:h-28 relative w-[260px] sm:w-[32rem] z-0 flex items-center justify-center">
                 <Image
                   src="/images/logo-seul.png"
                   alt="Bella Vista Restaurant"
@@ -34,7 +34,7 @@ export default async function Footer() {
               </div>
             </LocalizedClientLink>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
+          <div className="text-small-regular gap-6 md:gap-x-12 grid grid-cols-2 sm:grid-cols-3 relative z-10">
             {productCategories && productCategories?.length > 0 && (
               <div className="flex flex-col gap-y-2">
                 <span className="txt-small-plus txt-ui-fg-base">
@@ -93,32 +93,7 @@ export default async function Footer() {
                 </ul>
               </div>
             )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+
             <div className="flex flex-col gap-y-2">
               <span className="txt-small-plus txt-ui-fg-base">Contact</span>
               <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
@@ -144,7 +119,7 @@ export default async function Footer() {
             </div>
           </div>
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
+        <div className="flex w-full mb-8 justify-between text-ui-fg-muted relative z-10">
           <Text className="txt-compact-small">
             © {new Date().getFullYear()} Bella Vista Restaurant. All rights
             reserved.

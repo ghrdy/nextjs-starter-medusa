@@ -3,25 +3,21 @@ import { Suspense } from "react"
 
 import InteractiveLink from "@modules/common/components/interactive-link"
 import SkeletonProductGrid from "@modules/skeletons/templates/skeleton-product-grid"
-import RefinementList from "@modules/store/components/refinement-list"
-import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
-import PaginatedProducts from "@modules/store/templates/paginated-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
+import PaginatedProducts from "@modules/store/templates/paginated-products"
 
 export default function CategoryTemplate({
   category,
-  sortBy,
   page,
   countryCode,
 }: {
   category: HttpTypes.StoreProductCategory
-  sortBy?: SortOptions
+  sortBy?: any
   page?: string
   countryCode: string
 }) {
   const pageNumber = page ? parseInt(page) : 1
-  const sort = sortBy || "created_at"
 
   if (!category || !countryCode) notFound()
 
@@ -38,11 +34,10 @@ export default function CategoryTemplate({
 
   return (
     <div
-      className="flex flex-col small:flex-row small:items-start py-6 content-container"
+      className="flex flex-col items-center justify-center py-6 content-container"
       data-testid="category-container"
     >
-      <RefinementList sortBy={sort} data-testid="sort-by-container" />
-      <div className="w-full">
+      <div className="w-full max-w-5xl">
         <div className="flex flex-row mb-8 text-2xl-semi gap-4">
           {parents &&
             parents.map((parent) => (
@@ -64,19 +59,20 @@ export default function CategoryTemplate({
             <p>{category.description}</p>
           </div>
         )}
-        {category.category_children && (
-          <div className="mb-8 text-base-large">
-            <ul className="grid grid-cols-1 gap-2">
-              {category.category_children?.map((c) => (
-                <li key={c.id}>
-                  <InteractiveLink href={`/categories/${c.handle}`}>
-                    {c.name}
-                  </InteractiveLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        {category.category_children &&
+          category.category_children.length > 0 && (
+            <div className="mb-8 text-base-large">
+              <ul className="grid grid-cols-1 gap-2">
+                {category.category_children?.map((c) => (
+                  <li key={c.id}>
+                    <InteractiveLink href={`/categories/${c.handle}`}>
+                      {c.name}
+                    </InteractiveLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         <Suspense
           fallback={
             <SkeletonProductGrid
@@ -85,7 +81,6 @@ export default function CategoryTemplate({
           }
         >
           <PaginatedProducts
-            sortBy={sort}
             page={pageNumber}
             categoryId={category.id}
             countryCode={countryCode}

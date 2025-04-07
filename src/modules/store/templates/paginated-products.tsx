@@ -16,16 +16,24 @@ type PaginatedProductsParams = {
 const PaginatedProducts = async ({
   page = 1,
   countryCode,
+  categoryId,
 }: {
   page: number
   countryCode: string
+  categoryId?: string
 }) => {
+  const queryParams: PaginatedProductsParams = {
+    limit: PRODUCT_LIMIT,
+  }
+
+  if (categoryId) {
+    queryParams.category_id = [categoryId]
+  }
+
   const { response } = await listProductsWithSort({
     page,
     countryCode,
-    queryParams: {
-      limit: PRODUCT_LIMIT,
-    },
+    queryParams,
   })
 
   const { products, count } = response

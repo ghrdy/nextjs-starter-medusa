@@ -8,9 +8,9 @@ import PlaceholderImage from "@modules/common/icons/placeholder-image"
 const CategoriesTemplate = async ({ countryCode }: { countryCode: string }) => {
   const productCategories = await listCategories()
 
-  // Filtrer pour n'avoir que les catégories principales
+  // Filtrer pour n'avoir que les catégories principales, en excluant "toppings"
   const mainCategories = productCategories.filter(
-    (category) => !category.parent_category
+    (category) => !category.parent_category && category.handle !== "toppings"
   )
 
   return (
