@@ -270,7 +270,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
             <div className="relative flex items-center justify-center">
               <FaShoppingCart size={24} />
               <motion.span
-                className="absolute -top-3 -right-3 bg-black text-white text-xs font-bold h-5 w-5 flex items-center justify-center rounded-full"
+                className="absolute -top-3 -right-2 text-white text-xs font-bold flex items-center justify-center"
                 initial={{ scale: 0 }}
                 animate={{
                   scale: animateButton ? [1, 1.3, 1] : 1,
@@ -353,9 +353,6 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                 <h2 className="text-xl font-semibold flex items-center text-black">
                   <FaShoppingCart className="mr-2 text-black" />
                   Votre panier
-                  <span className="ml-2 text-sm bg-black text-white px-2 py-1 rounded-full">
-                    {totalItems} {totalItems > 1 ? "articles" : "article"}
-                  </span>
                 </h2>
                 <button
                   onClick={handleCloseCart}
