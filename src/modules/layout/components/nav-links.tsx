@@ -23,7 +23,7 @@ const NavLinks = () => {
 
         <div className="relative">
           <LocalizedClientLink
-            href="/store"
+            href="/commander"
             className="text-base font-medium hover:text-black pb-1 inline-block"
           >
             Commander

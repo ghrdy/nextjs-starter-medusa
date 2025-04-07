@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import { redirect } from "next/navigation"
 
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import StoreTemplate from "@modules/store/templates"
@@ -9,25 +10,12 @@ export const metadata: Metadata = {
 }
 
 type Params = {
-  searchParams: Promise<{
-    sortBy?: SortOptions
-    page?: string
-  }>
-  params: Promise<{
+  params: {
     countryCode: string
-  }>
+  }
 }
 
-export default async function StorePage(props: Params) {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-  const { sortBy, page } = searchParams
-
-  return (
-    <StoreTemplate
-      sortBy={sortBy}
-      page={page}
-      countryCode={params.countryCode}
-    />
-  )
+export default async function StorePage({ params }: Params) {
+  // Rediriger vers la page commander
+  redirect(`/${params.countryCode}/commander`)
 }
