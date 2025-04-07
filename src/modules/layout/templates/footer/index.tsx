@@ -16,14 +16,19 @@ export default async function Footer() {
     <footer className="border-t border-ui-border-base w-full">
       <div className="content-container flex flex-col w-full">
         <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
+          <div className="w-full xsmall:w-auto flex justify-center xsmall:justify-start items-center">
             <LocalizedClientLink href="/" className="hover:text-ui-fg-base">
-              <div className="h-20 relative w-80">
+              <div className="h-48 sm:h-40 relative w-[260px] sm:w-[32rem] z-10 flex items-center justify-center">
                 <Image
-                  src="/images/bellavista-logo.png"
+                  src="/images/logo-seul.png"
                   alt="Bella Vista Restaurant"
                   fill
-                  style={{ objectFit: "contain" }}
+                  style={{
+                    objectFit: "contain",
+                    objectPosition: "center",
+                    top: "82.5%",
+                    transform: "translateY(-50%) scale(3)",
+                  }}
                   priority
                 />
               </div>

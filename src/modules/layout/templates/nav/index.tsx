@@ -16,19 +16,19 @@ export default async function Nav() {
       {/* Header mobile */}
       <header className="relative h-16 border-b duration-200 bg-white border-ui-border-base overflow-visible sm:hidden">
         <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
-          <div className="flex-1 basis-0 h-full flex items-center">
+          <div className="flex-1 basis-0 h-full flex items-center z-20">
             <div className="h-full">
               <SideMenu regions={regions} />
             </div>
           </div>
 
-          <div className="flex-auto flex items-center justify-center overflow-visible h-full">
+          <div className="flex-auto flex items-center justify-center overflow-visible h-full z-10">
             <LocalizedClientLink
               href="/"
               aria-label="Bella Vista Restaurant"
               data-testid="nav-store-link-mobile"
               className="relative block mx-auto"
-              style={{ width: "200px", height: "50px" }}
+              style={{ width: "260px", height: "65px" }}
             >
               <Image
                 src="/images/bellavista-logo.png"
@@ -37,7 +37,10 @@ export default async function Nav() {
                 style={{
                   objectFit: "contain",
                   objectPosition: "center",
-                  transform: "scale(1.3)",
+                  transform: "scale(1.8)",
+                  top: "1.5px",
+                  paddingTop: "5px",
+                  paddingBottom: "5px",
                 }}
                 priority
               />
