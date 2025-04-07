@@ -4,6 +4,11 @@ import "styles/globals.css"
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseURL()),
+  title: "Bella Vista Restaurant",
+  description: "Restaurant italien authentique",
+  icons: {
+    icon: "/images/bellavista-logo.png",
+  },
 }
 
 export default function RootLayout(props: { children: React.ReactNode }) {

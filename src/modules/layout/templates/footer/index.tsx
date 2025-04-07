@@ -1,6 +1,7 @@
 import { listCategories } from "@lib/data/categories"
 import { listCollections } from "@lib/data/collections"
 import { Text, clx } from "@medusajs/ui"
+import Image from "next/image"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import MedusaCTA from "@modules/layout/components/medusa-cta"
@@ -16,11 +17,16 @@ export default async function Footer() {
       <div className="content-container flex flex-col w-full">
         <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
           <div>
-            <LocalizedClientLink
-              href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
-            >
-              Medusa Store
+            <LocalizedClientLink href="/" className="hover:text-ui-fg-base">
+              <div className="h-20 relative w-80">
+                <Image
+                  src="/images/bellavista-logo.png"
+                  alt="Bella Vista Restaurant"
+                  fill
+                  style={{ objectFit: "contain" }}
+                  priority
+                />
+              </div>
             </LocalizedClientLink>
           </div>
           <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
@@ -109,36 +115,24 @@ export default async function Footer() {
               </div>
             )}
             <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
+              <span className="txt-small-plus txt-ui-fg-base">Contact</span>
               <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
+                <li className="hover:text-ui-fg-base">
+                  <a href="tel:+33169648029">01.69.64.80.29</a>
+                </li>
+                <li className="hover:text-ui-fg-base">
+                  <a href="mailto:contact@bellavista.fr">
+                    contact@bellavista.fr
                   </a>
                 </li>
-                <li>
+                <li className="hover:text-ui-fg-base">
                   <a
-                    href="https://docs.medusajs.com"
+                    href="https://goo.gl/maps/example"
                     target="_blank"
                     rel="noreferrer"
-                    className="hover:text-ui-fg-base"
                   >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
+                    Centre Commercial La Croix Verte, Av. Charles de Gaulle,
+                    Saint-Germain-lès-Corbeil 91250
                   </a>
                 </li>
               </ul>
@@ -147,7 +141,8 @@ export default async function Footer() {
         </div>
         <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
           <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
+            © {new Date().getFullYear()} Bella Vista Restaurant. All rights
+            reserved.
           </Text>
           <MedusaCTA />
         </div>
