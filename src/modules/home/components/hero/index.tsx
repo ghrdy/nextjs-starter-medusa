@@ -19,15 +19,11 @@ const Hero = () => {
             Powered by Medusa and Next.js
           </Heading>
         </span>
-        <a
-          href="https://github.com/medusajs/nextjs-starter-medusa"
-          target="_blank"
-        >
-          <Button variant="secondary">
-            View on GitHub
-            <Github />
-          </Button>
-        </a>
+
+        <Button>
+          Des pizzas artisanales préparées avec passion, avec des ingrédients
+          frais et de qualité.
+        </Button>
       </div>
     </div>
   )

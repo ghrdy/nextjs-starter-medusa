@@ -19,7 +19,7 @@ export default async function RelatedProducts({
   }
 
   // edit this function to define your related products logic
-  const queryParams: HttpTypes.StoreProductParams = {}
+  const queryParams: Record<string, any> = {}
   if (region?.id) {
     queryParams.region_id = region.id
   }
@@ -38,7 +38,13 @@ export default async function RelatedProducts({
     countryCode,
   }).then(({ response }) => {
     return response.products.filter(
-      (responseProduct) => responseProduct.id !== product.id
+      (responseProduct) =>
+        // Exclure le produit actuel
+        responseProduct.id !== product.id &&
+        // Exclure les produits de la catégorie "Toppings"
+        !responseProduct.categories?.some(
+          (category) => category.name.toLowerCase() === "toppings"
+        )
     )
   })
 
