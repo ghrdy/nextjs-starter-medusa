@@ -8,6 +8,7 @@ import { Fragment } from "react"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import CountrySelect from "../country-select"
 import { HttpTypes } from "@medusajs/types"
+import User from "@modules/common/icons/user"
 
 const SideMenuItems = {
   Home: "/",
@@ -60,10 +61,11 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
                           <li key={name}>
                             <LocalizedClientLink
                               href={href}
-                              className="text-3xl leading-10 hover:text-ui-fg-disabled"
+                              className="text-3xl leading-10 hover:text-ui-fg-disabled flex items-center gap-x-2"
                               onClick={close}
                               data-testid={`${name.toLowerCase()}-link`}
                             >
+                              {name === "Account" && <User size={24} />}
                               {name}
                             </LocalizedClientLink>
                           </li>

@@ -7,6 +7,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
 import NavLinks from "@modules/layout/components/nav-links"
+import User from "@modules/common/icons/user"
 
 export default async function Nav() {
   const regions = await listRegions().then((regions: StoreRegion[]) => regions)
@@ -48,6 +49,14 @@ export default async function Nav() {
           </div>
 
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
+            <LocalizedClientLink
+              className="hover:text-ui-fg-base flex items-center justify-center mr-2"
+              href="/account"
+              data-testid="nav-account-link-mobile"
+              aria-label="Compte"
+            >
+              <User size={20} />
+            </LocalizedClientLink>
             <Suspense
               fallback={
                 <LocalizedClientLink
@@ -97,11 +106,12 @@ export default async function Nav() {
             <div className="flex items-center gap-x-6 flex-1 basis-0 justify-end">
               <div className="hidden small:flex items-center gap-x-6">
                 <LocalizedClientLink
-                  className="hover:text-ui-fg-base"
+                  className="hover:text-ui-fg-base flex items-center justify-center"
                   href="/account"
                   data-testid="nav-account-link"
+                  aria-label="Compte"
                 >
-                  Compte
+                  <User size={20} />
                 </LocalizedClientLink>
               </div>
               <Suspense
