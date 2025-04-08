@@ -49,8 +49,9 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   const toggleTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isTogglingRef = useRef<boolean>(false)
 
-  // Vérification si on est sur une page de checkout - après l'appel de tous les hooks
+  // Vérification si on est sur une page de checkout ou sur la page panier
   const isCheckoutPage = pathname?.startsWith("/checkout")
+  const isCartPage = pathname?.endsWith("/cart")
 
   // Fonction pour fermer le panier
   const closeCart = () => setIsOpen(false)
@@ -214,13 +215,8 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
     closeCart() // Utiliser closeCart au lieu de toggleCart
   }
 
-  // Si on est sur une page de checkout, ne pas afficher le panier
-  if (isCheckoutPage) {
-    return null
-  }
-
-  // Si le composant n'est pas encore monté, retourner null pour éviter le rendu pendant les transitions
-  if (!mounted) {
+  // Masquer le bouton du panier si on est sur la page panier ou une page de checkout
+  if (isCartPage || isCheckoutPage || !mounted) {
     return null
   }
 
