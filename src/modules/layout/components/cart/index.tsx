@@ -49,9 +49,11 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   const toggleTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isTogglingRef = useRef<boolean>(false)
 
-  // Vérification si on est sur une page de checkout ou sur la page panier
+  // Vérification si on est sur une page de checkout - après l'appel de tous les hooks
   const isCheckoutPage = pathname?.startsWith("/checkout")
-  const isCartPage = pathname?.endsWith("/cart")
+
+  // Vérifier si on est sur la page du panier (tenant compte des routes localisées)
+  const isCartPage = pathname?.includes("/cart") && pathname?.endsWith("/cart")
 
   // Fonction pour fermer le panier
   const closeCart = () => setIsOpen(false)
@@ -121,19 +123,15 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   useEffect(() => {
     if (!mounted) return
 
-    // Enregistrer le style original
-    const originalOverflow = document.body.style.overflow
-
     if (isOpen) {
       document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "auto"
     }
     return () => {
-      // Ne restaurer l'overflow original que si nous ne sommes plus sur la page panier
-      if (!isCartPage) {
-        document.body.style.overflow = originalOverflow
-      }
+      document.body.style.overflow = "auto"
     }
-  }, [isOpen, mounted, isCartPage])
+  }, [isOpen, mounted])
 
   // Close cart on escape key
   useEffect(() => {
@@ -219,8 +217,13 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
     closeCart() // Utiliser closeCart au lieu de toggleCart
   }
 
-  // Masquer le bouton du panier si on est sur la page panier ou une page de checkout
-  if (isCartPage || isCheckoutPage || !mounted) {
+  // Si on est sur une page de checkout ou sur la page panier, ne pas afficher le panier
+  if (isCheckoutPage || isCartPage) {
+    return null
+  }
+
+  // Si le composant n'est pas encore monté, retourner null pour éviter le rendu pendant les transitions
+  if (!mounted) {
     return null
   }
 
@@ -301,7 +304,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
 
             {/* Cart panel */}
             <motion.div
-              className="fixed right-0 bottom-0 h-[calc(100vh-3rem)] max-h-[80vh] w-full max-w-[calc(100vw-24px)] sm:max-w-sm bg-white z-50 shadow-xl flex flex-col rounded-xl overflow-hidden"
+              className="fixed right-6 bottom-6 h-[calc(100vh-3rem)] max-h-[80vh] w-[calc(100vw-3rem)] max-w-sm bg-white z-50 shadow-xl flex flex-col rounded-xl overflow-hidden"
               initial={{
                 width: "56px",
                 height: "56px",
@@ -313,13 +316,13 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                 scale: 0.95,
               }}
               animate={{
-                width: "100%",
+                width: "calc(100vw - 3rem)",
                 height: "calc(100vh - 3rem)",
-                maxWidth: "calc(100vw - 24px)",
+                maxWidth: "24rem",
                 maxHeight: "80vh",
                 borderRadius: "0.75rem",
-                right: "0",
-                bottom: "0",
+                right: "24px",
+                bottom: "24px",
                 opacity: 1,
                 overflow: "hidden",
                 scale: 1,
@@ -365,7 +368,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
 
               {/* Cart items */}
               <motion.div
-                className="flex-1 overflow-y-hidden p-4 bg-white border-t border-gray-200 relative"
+                className="flex-1 overflow-y-auto p-4 bg-white border-t border-gray-200 relative"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.15, duration: 0.2 }}
@@ -383,7 +386,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                     </button>
                   </div>
                 ) : (
-                  <ul className="space-y-4 h-full overflow-y-auto overflow-x-hidden w-full pr-2">
+                  <ul className="space-y-4">
                     {cartState.items
                       .sort((a, b) => {
                         return (a.created_at ?? "") > (b.created_at ?? "")
@@ -394,7 +397,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                         return (
                           <motion.li
                             key={item.id}
-                            className="flex gap-3 p-3 bg-gray-50 rounded-xl w-full max-w-full"
+                            className="flex gap-3 p-3 bg-gray-50 rounded-xl"
                             layout
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
