@@ -52,8 +52,8 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   // Vérification si on est sur une page de checkout - après l'appel de tous les hooks
   const isCheckoutPage = pathname?.startsWith("/checkout")
 
-  // Vérifier si on est sur la page du panier (tenant compte des routes localisées)
-  const isCartPage = pathname?.includes("/cart") && pathname?.endsWith("/cart")
+  // Vérifier si on est sur la page du panier
+  const isCartPage = pathname?.endsWith("/cart")
 
   // Fonction pour fermer le panier
   const closeCart = () => setIsOpen(false)
@@ -217,13 +217,9 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
     closeCart() // Utiliser closeCart au lieu de toggleCart
   }
 
-  // Si on est sur une page de checkout ou sur la page panier, ne pas afficher le panier
-  if (isCheckoutPage || isCartPage) {
-    return null
-  }
-
-  // Si le composant n'est pas encore monté, retourner null pour éviter le rendu pendant les transitions
-  if (!mounted) {
+  // Après tous les hooks et avant le return principal, on peut ajouter notre condition
+  // Si on est sur une page de checkout ou sur la page du panier, ne pas afficher le panier
+  if (isCheckoutPage || isCartPage || !mounted) {
     return null
   }
 

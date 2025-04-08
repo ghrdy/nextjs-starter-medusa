@@ -13,9 +13,9 @@ export default async function Nav() {
   const regions = await listRegions().then((regions: StoreRegion[]) => regions)
 
   return (
-    <div className="sticky top-0 inset-x-0 z-50 group w-full overflow-x-hidden">
+    <div className="sticky top-0 inset-x-0 z-50 group">
       {/* Header mobile */}
-      <header className="relative h-16 border-b duration-200 bg-white border-ui-border-base sm:hidden">
+      <header className="relative h-16 border-b duration-200 bg-white border-ui-border-base overflow-visible sm:hidden">
         <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
           <div className="flex-1 basis-0 h-full flex items-center z-20">
             <div className="h-full">
@@ -50,7 +50,7 @@ export default async function Nav() {
 
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
             <LocalizedClientLink
-              className="hover:text-ui-fg-base hover:bg-gray-100 rounded-full flex items-center justify-center mr-2 relative z-30 p-2 transition-colors"
+              className="hover:text-ui-fg-base flex items-center justify-center mr-2"
               href="/account"
               data-testid="nav-account-link-mobile"
               aria-label="Compte"
@@ -106,7 +106,7 @@ export default async function Nav() {
             <div className="flex items-center gap-x-6 flex-1 basis-0 justify-end">
               <div className="hidden small:flex items-center gap-x-6">
                 <LocalizedClientLink
-                  className="hover:text-ui-fg-base hover:bg-gray-100 rounded-full flex items-center justify-center relative z-30 p-2 transition-colors"
+                  className="hover:text-ui-fg-base flex items-center justify-center"
                   href="/account"
                   data-testid="nav-account-link"
                   aria-label="Compte"
