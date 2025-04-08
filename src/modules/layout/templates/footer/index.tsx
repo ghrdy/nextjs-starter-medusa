@@ -101,8 +101,7 @@ export default async function Footer() {
         </div>
         <div className="flex w-full mb-8 justify-between text-ui-fg-muted relative z-10">
           <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Bella Vista Restaurant. All rights
-            reserved.
+            © {new Date().getFullYear()} La Bella Vista, tous droits réservés.
           </Text>
           <MedusaCTA />
         </div>

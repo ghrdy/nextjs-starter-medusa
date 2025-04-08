@@ -50,7 +50,7 @@ export default async function Nav() {
 
           <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
             <LocalizedClientLink
-              className="hover:text-ui-fg-base flex items-center justify-center mr-2"
+              className="hover:text-ui-fg-base flex items-center justify-center mr-2 relative z-30"
               href="/account"
               data-testid="nav-account-link-mobile"
               aria-label="Compte"
@@ -106,7 +106,7 @@ export default async function Nav() {
             <div className="flex items-center gap-x-6 flex-1 basis-0 justify-end">
               <div className="hidden small:flex items-center gap-x-6">
                 <LocalizedClientLink
-                  className="hover:text-ui-fg-base flex items-center justify-center"
+                  className="hover:text-ui-fg-base flex items-center justify-center relative z-30"
                   href="/account"
                   data-testid="nav-account-link"
                   aria-label="Compte"
