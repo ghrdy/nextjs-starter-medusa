@@ -10,20 +10,17 @@ const Hero = () => {
             level="h1"
             className="text-3xl leading-10 text-ui-fg-base font-normal"
           >
-            Ecommerce Starter Template
+            La Bella Vista
           </Heading>
           <Heading
             level="h2"
             className="text-3xl leading-10 text-ui-fg-subtle font-normal"
           >
-            Powered by Medusa and Next.js
+            Une cuisine artisanale préparée avec passion
+            <br />
+            Des ingrédients frais et de qualité.
           </Heading>
         </span>
-
-        <Button>
-          Des pizzas artisanales préparées avec passion, avec des ingrédients
-          frais et de qualité.
-        </Button>
       </div>
     </div>
   )
