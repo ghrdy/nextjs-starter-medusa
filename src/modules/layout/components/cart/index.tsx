@@ -121,15 +121,19 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   useEffect(() => {
     if (!mounted) return
 
+    // Enregistrer le style original
+    const originalOverflow = document.body.style.overflow
+
     if (isOpen) {
       document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = "auto"
     }
     return () => {
-      document.body.style.overflow = "auto"
+      // Ne restaurer l'overflow original que si nous ne sommes plus sur la page panier
+      if (!isCartPage) {
+        document.body.style.overflow = originalOverflow
+      }
     }
-  }, [isOpen, mounted])
+  }, [isOpen, mounted, isCartPage])
 
   // Close cart on escape key
   useEffect(() => {
@@ -297,7 +301,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
 
             {/* Cart panel */}
             <motion.div
-              className="fixed right-6 bottom-6 h-[calc(100vh-3rem)] max-h-[80vh] w-[calc(100vw-3rem)] max-w-sm bg-white z-50 shadow-xl flex flex-col rounded-xl overflow-hidden"
+              className="fixed right-0 bottom-0 h-[calc(100vh-3rem)] max-h-[80vh] w-full max-w-[calc(100vw-24px)] sm:max-w-sm bg-white z-50 shadow-xl flex flex-col rounded-xl overflow-hidden"
               initial={{
                 width: "56px",
                 height: "56px",
@@ -309,13 +313,13 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                 scale: 0.95,
               }}
               animate={{
-                width: "calc(100vw - 3rem)",
+                width: "100%",
                 height: "calc(100vh - 3rem)",
-                maxWidth: "24rem",
+                maxWidth: "calc(100vw - 24px)",
                 maxHeight: "80vh",
                 borderRadius: "0.75rem",
-                right: "24px",
-                bottom: "24px",
+                right: "0",
+                bottom: "0",
                 opacity: 1,
                 overflow: "hidden",
                 scale: 1,
@@ -361,7 +365,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
 
               {/* Cart items */}
               <motion.div
-                className="flex-1 overflow-y-auto p-4 bg-white border-t border-gray-200 relative"
+                className="flex-1 overflow-y-hidden p-4 bg-white border-t border-gray-200 relative"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.15, duration: 0.2 }}
@@ -379,7 +383,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                     </button>
                   </div>
                 ) : (
-                  <ul className="space-y-4">
+                  <ul className="space-y-4 h-full overflow-y-auto overflow-x-hidden w-full pr-2">
                     {cartState.items
                       .sort((a, b) => {
                         return (a.created_at ?? "") > (b.created_at ?? "")
@@ -390,7 +394,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                         return (
                           <motion.li
                             key={item.id}
-                            className="flex gap-3 p-3 bg-gray-50 rounded-xl"
+                            className="flex gap-3 p-3 bg-gray-50 rounded-xl w-full max-w-full"
                             layout
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
