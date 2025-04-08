@@ -4,8 +4,8 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 
 const NavLinks = () => {
   return (
-    <div className="flex items-center justify-center mt-1">
-      <nav className="flex space-x-12 text-gray-700">
+    <div className="flex items-center justify-center mt-1 w-full overflow-x-hidden">
+      <nav className="flex space-x-6 sm:space-x-12 text-gray-700 flex-wrap justify-center px-2">
         <div className="relative">
           <LocalizedClientLink
             href="/"
