@@ -54,9 +54,7 @@ export default async function Nav() {
                   className="hover:text-ui-fg-base flex gap-2"
                   href="/cart"
                   data-testid="nav-cart-link"
-                >
-                  Cart (0)
-                </LocalizedClientLink>
+                ></LocalizedClientLink>
               }
             >
               <CartButton />
@@ -112,9 +110,7 @@ export default async function Nav() {
                     className="hover:text-ui-fg-base flex gap-2"
                     href="/cart"
                     data-testid="nav-cart-link"
-                  >
-                    Cart (0)
-                  </LocalizedClientLink>
+                  ></LocalizedClientLink>
                 }
               >
                 <CartButton />

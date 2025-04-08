@@ -403,14 +403,22 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                           >
                             {/* Item image */}
                             <div className="w-20 h-20 relative rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
-                              {/* Placeholder affiché uniquement si pas d'image ou erreur de chargement */}
-                              {!item.thumbnail ? (
+                              {/* Utiliser thumbnail ou première image disponible */}
+                              {!item.thumbnail &&
+                              (!item.variant?.product?.images ||
+                                item.variant?.product?.images.length === 0) ? (
                                 <div className="absolute inset-0">
                                   <ImagePlaceholder name={item.title} />
                                 </div>
                               ) : (
                                 <Image
-                                  src={item.thumbnail}
+                                  src={
+                                    item.thumbnail ||
+                                    (item.variant?.product?.images &&
+                                    item.variant?.product?.images.length > 0
+                                      ? item.variant.product.images[0].url
+                                      : "")
+                                  }
                                   alt={item.title}
                                   fill
                                   sizes="80px"

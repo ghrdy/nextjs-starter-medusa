@@ -103,10 +103,15 @@ const CategoryCard = ({
       href={`/${countryCode}/categories/${handle}`}
       className="no-underline text-inherit group"
     >
-      <div data-testid="category-wrapper">
+      <div
+        data-testid="category-wrapper"
+        className="transform transition-all duration-300 hover:scale-[1.03]"
+      >
         <CategoryThumbnail category={category} featuredImage={featuredImage} />
         <div className="flex txt-compact-medium mt-4 justify-between">
-          <Text className="text-ui-fg-subtle">{category.name}</Text>
+          <Text className="text-ui-fg-subtle group-hover:text-ui-fg-base transition-colors duration-300">
+            {category.name}
+          </Text>
         </div>
       </div>
     </a>
@@ -125,15 +130,16 @@ const CategoryThumbnail = ({
     <Container
       className={clx(
         "relative w-full overflow-hidden p-4 bg-ui-bg-subtle shadow-elevation-card-rest rounded-large group-hover:shadow-elevation-card-hover transition-shadow ease-in-out duration-150",
-        "aspect-[16/9]",
-        "w-full"
+        "aspect-[16/10]",
+        "w-full",
+        "group-hover:shadow-lg"
       )}
     >
       {featuredImage ? (
         <Image
           src={featuredImage}
           alt={category.name}
-          className="absolute inset-0 object-cover object-center"
+          className="absolute inset-0 object-cover object-center transition-transform duration-500 group-hover:scale-105"
           draggable={false}
           quality={70}
           sizes="(max-width: 576px) 280px, (max-width: 768px) 360px, (max-width: 992px) 480px, 800px"
