@@ -15,9 +15,6 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col items-center justify-center py-6 content-container">
       <div className="w-full max-w-5xl">
-        <div className="mb-8 text-2xl-semi text-center">
-          <h1>Contactez-nous</h1>
-        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="flex flex-col gap-y-4">
             <div className="bg-white p-8 rounded-lg shadow-sm border border-ui-border-base">
