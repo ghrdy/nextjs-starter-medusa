@@ -1,6 +1,8 @@
 import { Metadata } from "next"
 import ContactForm from "@modules/contact/components/contact-form"
 import GoogleMap from "@modules/contact/components/google-map"
+import { MapPin } from "lucide-react"
+import RecenterButton from "@modules/contact/components/recenter-button"
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -12,9 +14,16 @@ export default function ContactPage() {
     "Centre Commercial La Croix Verte, Av. Charles de Gaulle, Saint-Germain-lès-Corbeil 91250"
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""
 
+  // URL encodée pour Google Maps
+  const encodedAddress = encodeURIComponent(address)
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`
+
   return (
     <div className="flex flex-col items-center justify-center py-6 content-container">
       <div className="w-full max-w-5xl">
+        <div className="mb-8 text-2xl-semi text-center">
+          <h1>Contactez-nous</h1>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="flex flex-col gap-y-4">
             <div className="bg-white p-8 rounded-lg shadow-sm border border-ui-border-base">
@@ -48,7 +57,21 @@ export default function ContactPage() {
                 </p>
               </div>
             </div>
-            <GoogleMap address={address} apiKey={apiKey} />
+            <div className="relative">
+              <GoogleMap address={address} apiKey={apiKey} />
+              <div className="absolute bottom-4 right-4 flex gap-2">
+                <RecenterButton />
+                <a
+                  href={googleMapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-white px-4 py-2 rounded-md shadow-md flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                >
+                  <MapPin size={18} />
+                  <span>Ouvrir dans Google Maps</span>
+                </a>
+              </div>
+            </div>
           </div>
           <ContactForm />
         </div>
