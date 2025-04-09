@@ -28,6 +28,8 @@ declare global {
         Animation: {
           DROP: number
         }
+        Size: new (width: number, height: number) => any
+        Point: new (x: number, y: number) => any
       }
     }
   }
@@ -78,14 +80,55 @@ const GoogleMap = ({ address, apiKey, className = "" }: GoogleMapProps) => {
 
           mapInstanceRef.current = map
 
+          // Créer une icône personnalisée pour le marqueur avec le cadre SVG
+          const markerIcon = {
+            url: "/images/store-marker-container.svg", // Utiliser le fichier SVG externe
+            scaledSize: new window.google.maps.Size(80, 100), // Taille adaptée au conteneur
+            origin: new window.google.maps.Point(0, 0),
+            anchor: new window.google.maps.Point(40, 100), // Point d'ancrage (centre en bas)
+          }
+
           const marker = new window.google.maps.Marker({
             map,
             position: location,
             animation: window.google.maps.Animation.DROP,
             title: "Bella Vista Restaurant",
+            icon: markerIcon,
           })
 
           markerRef.current = marker
+
+          // Ajouter un style personnalisé pour l'image
+          const style = document.createElement("style")
+          style.textContent = `
+            .store-image {
+              width: 64px;
+              height: 68px;
+              background-image: url('/images/bellavista-store-hq.jpg');
+              background-size: cover;
+              background-position: center;
+              position: absolute;
+              top: 6px;
+              left: 6px;
+              border-radius: 6px;
+              z-index: 1;
+            }
+          `
+          document.head.appendChild(style)
+
+          // Créer un div pour l'image et l'ajouter au marqueur
+          const imageOverlay = document.createElement("div")
+          imageOverlay.className = "store-image"
+
+          // Attendre que le marqueur soit rendu avant d'ajouter l'overlay
+          setTimeout(() => {
+            const markerElement = document.querySelector(
+              `[title="Bella Vista Restaurant"]`
+            )
+            if (markerElement) {
+              markerElement.appendChild(imageOverlay)
+            }
+          }, 100)
         } else {
           console.error("Geocode error: " + status)
         }
