@@ -82,10 +82,10 @@ const GoogleMap = ({ address, apiKey, className = "" }: GoogleMapProps) => {
 
           // Créer une icône personnalisée pour le marqueur avec le cadre SVG
           const markerIcon = {
-            url: "/images/store-marker-container.svg", // Utiliser le fichier SVG externe
-            scaledSize: new window.google.maps.Size(80, 100), // Taille adaptée au conteneur
+            url: "/images/store-marker-container.svg",
+            scaledSize: new window.google.maps.Size(80, 100),
             origin: new window.google.maps.Point(0, 0),
-            anchor: new window.google.maps.Point(40, 100), // Point d'ancrage (centre en bas)
+            anchor: new window.google.maps.Point(40, 100),
           }
 
           const marker = new window.google.maps.Marker({
@@ -104,13 +104,30 @@ const GoogleMap = ({ address, apiKey, className = "" }: GoogleMapProps) => {
               width: 64px;
               height: 68px;
               background-image: url('/images/bellavista-store-hq.jpg');
-              background-size: cover;
+              background-size: 100%;
               background-position: center;
               position: absolute;
               top: 6px;
               left: 6px;
               border-radius: 6px;
               z-index: 1;
+              opacity: 0;
+              animation: fadeIn 0.3s ease-in forwards;
+              cursor: pointer;
+              transition: transform 0.2s ease-in-out;
+            }
+
+            .store-image:hover {
+              transform: scale(1.05);
+            }
+
+            @keyframes fadeIn {
+              from {
+                opacity: 0;
+              }
+              to {
+                opacity: 1;
+              }
             }
           `
           document.head.appendChild(style)
@@ -118,6 +135,12 @@ const GoogleMap = ({ address, apiKey, className = "" }: GoogleMapProps) => {
           // Créer un div pour l'image et l'ajouter au marqueur
           const imageOverlay = document.createElement("div")
           imageOverlay.className = "store-image"
+          imageOverlay.addEventListener("click", () => {
+            window.open(
+              "https://www.google.com/maps/place/La+Bella+Vista/@48.6202061,2.4868062,17z/data=!3m1!4b1!4m6!3m5!1s0x47e5e1d54582bc73:0x99e80ab97417a766!8m2!3d48.6202027!4d2.4916771!16s%2Fg%2F11tdqgv54n?entry=ttu&g_ep=EgoyMDI1MDQwNi4wIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D",
+              "_blank"
+            )
+          })
 
           // Attendre que le marqueur soit rendu avant d'ajouter l'overlay
           setTimeout(() => {
@@ -138,17 +161,31 @@ const GoogleMap = ({ address, apiKey, className = "" }: GoogleMapProps) => {
     if (window.google && window.google.maps) {
       initMap()
     } else {
-      // Charger l'API Google Maps
-      const script = document.createElement("script")
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`
-      script.async = true
-      script.defer = true
-      script.onload = initMap
-      document.head.appendChild(script)
+      // Vérifier si le script est déjà en cours de chargement
+      const existingScript = document.querySelector(
+        'script[src*="maps.googleapis.com/maps/api/js"]'
+      )
+      if (!existingScript) {
+        // Charger l'API Google Maps
+        const script = document.createElement("script")
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`
+        script.async = true
+        script.defer = true
+        script.onload = initMap
+        document.head.appendChild(script)
+      } else {
+        // Si le script existe déjà, attendre qu'il soit chargé
+        existingScript.addEventListener("load", initMap)
+      }
 
       return () => {
         // Nettoyer le script si le composant est démonté avant le chargement
-        document.head.removeChild(script)
+        const script = document.querySelector(
+          'script[src*="maps.googleapis.com/maps/api/js"]'
+        )
+        if (script) {
+          script.removeEventListener("load", initMap)
+        }
       }
     }
   }, [address, apiKey])
@@ -170,9 +207,7 @@ const GoogleMap = ({ address, apiKey, className = "" }: GoogleMapProps) => {
   }, [])
 
   return (
-    <div
-      className={`w-full h-96 rounded-lg overflow-hidden shadow-sm ${className}`}
-    >
+    <div className={`w-full rounded-lg overflow-hidden shadow-sm ${className}`}>
       <div ref={mapRef} className="w-full h-full" />
     </div>
   )

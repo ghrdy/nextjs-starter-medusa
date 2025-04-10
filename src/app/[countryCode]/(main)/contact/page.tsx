@@ -19,12 +19,12 @@ export default function ContactPage() {
     "https://www.google.com/maps/place/La+Bella+Vista/@48.6202061,2.4868062,17z/data=!3m1!4b1!4m6!3m5!1s0x47e5e1d54582bc73:0x99e80ab97417a766!8m2!3d48.6202027!4d2.4916771!16s%2Fg%2F11tdqgv54n?entry=ttu&g_ep=EgoyMDI1MDQwNi4wIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D"
 
   return (
-    <div className="flex flex-col items-center justify-center py-6 content-container">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] py-4 content-container">
       <div className="w-full max-w-5xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="flex flex-col gap-y-4">
-            <div className="bg-white p-8 rounded-lg shadow-sm border border-ui-border-base">
-              <h2 className="text-xl-semi mb-4">Nos coordonnées</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-y-3">
+            <div className="bg-white px-6 py-3 rounded-lg shadow-sm border border-ui-border-base">
+              <h2 className="text-xl-semi mb-3">Nos coordonnées</h2>
               <div className="flex flex-col gap-y-2">
                 <p className="text-base-regular">
                   <strong>Adresse :</strong>
@@ -55,7 +55,7 @@ export default function ContactPage() {
               </div>
             </div>
             <div className="relative">
-              <GoogleMap address={address} apiKey={apiKey} />
+              <GoogleMap address={address} apiKey={apiKey} className="h-80" />
               <div className="absolute bottom-4 right-4 flex gap-2">
                 <RecenterButton />
                 <a
