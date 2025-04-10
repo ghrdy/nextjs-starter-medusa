@@ -29,16 +29,25 @@ export default async function ProductPreview({
   })
 
   return (
-    <LocalizedClientLink href={`/products/${product.handle}`} className="group">
-      <div data-testid="product-wrapper">
-        <Thumbnail
-          thumbnail={product.thumbnail}
-          images={product.images}
-          size="full"
-          isFeatured={isFeatured}
-        />
+    <LocalizedClientLink
+      href={`/products/${product.handle}`}
+      className="group block hover:scale-[1.02] transition-all duration-500 rounded-lg"
+    >
+      <div data-testid="product-wrapper" className="transform-gpu">
+        <div className="overflow-hidden rounded-lg">
+          <Thumbnail
+            thumbnail={product.thumbnail}
+            images={product.images}
+            size="full"
+            isFeatured={isFeatured}
+            className="group-hover:scale-[1.02] transition-all duration-500"
+          />
+        </div>
         <div className="flex txt-compact-medium mt-4 justify-between">
-          <Text className="text-ui-fg-subtle" data-testid="product-title">
+          <Text
+            className="text-ui-fg-subtle group-hover:text-ui-fg-base transition-colors duration-500"
+            data-testid="product-title"
+          >
             {product.title}
           </Text>
           <div className="flex items-center gap-x-2">
