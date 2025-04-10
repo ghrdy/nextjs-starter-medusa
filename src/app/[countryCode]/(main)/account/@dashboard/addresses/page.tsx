@@ -7,8 +7,8 @@ import { getRegion } from "@lib/data/regions"
 import { retrieveCustomer } from "@lib/data/customer"
 
 export const metadata: Metadata = {
-  title: "Addresses",
-  description: "View your addresses",
+  title: "Adresses",
+  description: "Voir et modifier vos adresses de livraison",
 }
 
 export default async function Addresses(props: {
@@ -26,10 +26,11 @@ export default async function Addresses(props: {
   return (
     <div className="w-full" data-testid="addresses-page-wrapper">
       <div className="mb-8 flex flex-col gap-y-4">
-        <h1 className="text-2xl-semi">Shipping Addresses</h1>
+        <h1 className="text-2xl-semi">Adresse(s) de livraison</h1>
         <p className="text-base-regular">
-          View and update your shipping addresses, you can add as many as you
-          like. Saving your addresses will make them available during checkout.
+          Voir et modifier votre(s) adresse(s) de livraison, vous pouvez en
+          ajouter autant que vous le souhaitez. Enregistrer vos adresses vous
+          permettra de les utiliser lors de votre prochaine commande.
         </p>
       </div>
       <AddressBook customer={customer} region={region} />

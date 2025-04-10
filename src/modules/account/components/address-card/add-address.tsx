@@ -53,7 +53,7 @@ const AddAddress = ({
         onClick={open}
         data-testid="add-address-button"
       >
-        <span className="text-base-semi">New address</span>
+        <span className="text-base-semi">Nouvelle adresse</span>
         <Plus />
       </button>
 
