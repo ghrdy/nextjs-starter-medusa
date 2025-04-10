@@ -4,6 +4,6 @@
   <rect x="4" y="4" width="68" height="72" rx="8" fill="white" stroke="black" stroke-width="2"/>
   
     <!-- Flèche pointant vers le bas (pointe vers le bas) -->
-  <path d="M40 76 L30 86 L50 86 Z" fill="black" stroke="black" stroke-width="1"/>
+  <path d="M40 86 L30 76 L50 76 Z" fill="black" stroke="black" stroke-width="1"/>
 
 </svg> 

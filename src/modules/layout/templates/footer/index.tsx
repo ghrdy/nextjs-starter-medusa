@@ -78,8 +78,8 @@ export default async function Footer() {
                   <a href="tel:+33169648029">01.69.64.80.29</a>
                 </li>
                 <li className="hover:text-ui-fg-base">
-                  <a href="mailto:contact@bellavista.fr">
-                    contact@bellavista.fr
+                  <a href="mailto:contact@labellavista.fr">
+                    contact@labellavista.fr
                   </a>
                 </li>
                 <li className="hover:text-ui-fg-base">

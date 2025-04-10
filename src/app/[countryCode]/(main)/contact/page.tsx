@@ -46,10 +46,10 @@ export default function ContactPage() {
                   <strong>Email :</strong>
                   <br />
                   <a
-                    href="mailto:contact@bellavista.fr"
+                    href="mailto:contact@labellavista.fr"
                     className="hover:text-ui-fg-base"
                   >
-                    contact@bellavista.fr
+                    contact@labellavista.fr
                   </a>
                 </p>
               </div>
