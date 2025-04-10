@@ -91,7 +91,6 @@ const GoogleMap = ({ address, apiKey, className = "" }: GoogleMapProps) => {
           const marker = new window.google.maps.Marker({
             map,
             position: location,
-            animation: window.google.maps.Animation.DROP,
             title: "Bella Vista Restaurant",
             icon: markerIcon,
           })

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="80" height="100" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg">
   <!-- Rectangle arrondi pour la bordure -->
-  <rect x="4" y="4" width="72" height="72" rx="8" fill="white" stroke="black" stroke-width="2"/>
+  <rect x="4" y="4" width="68" height="72" rx="8" fill="white" stroke="black" stroke-width="2"/>
   
     <!-- Flèche pointant vers le bas (pointe vers le bas) -->
   <path d="M40 76 L30 86 L50 86 Z" fill="black" stroke="black" stroke-width="1"/>
