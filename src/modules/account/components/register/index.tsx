@@ -17,7 +17,7 @@ const Register = ({ setCurrentView }: Props) => {
 
   return (
     <div
-      className="max-w-sm flex flex-col items-center"
+      className="max-w-sm w-full flex flex-col items-center mx-auto"
       data-testid="register-page"
     >
       <h1 className="text-large-semi uppercase mb-6">
