@@ -187,6 +187,19 @@ const EditAddress: React.FC<EditAddressProps> = ({
                   data-testid="city-input"
                 />
               </div>
+              <Input
+                label="Province / Région"
+                name="province"
+                autoComplete="address-level1"
+                data-testid="province-input"
+              />
+              <CountrySelect
+                name="country_code"
+                autoComplete="country"
+                region={region}
+                required
+                data-testid="country-select"
+              />
             </div>
             {formState.error && (
               <div className="text-rose-500 text-small-regular py-2">

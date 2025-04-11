@@ -51,7 +51,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           name={name}
           rows={rows}
           className={clx(
-            "py-2 px-4 w-full border rounded-md text-base-regular transition-colors focus:outline-none",
+            "py-2 px-4 w-full border rounded-md text-base-regular transition-colors focus:outline-none resize-none",
             hasError
               ? "border-rose-500"
               : "border-ui-border-base focus:border-ui-fg-base",

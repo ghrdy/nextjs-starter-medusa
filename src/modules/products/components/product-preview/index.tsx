@@ -1,60 +1,57 @@
-import { Text } from "@medusajs/ui"
-import { listProducts } from "@lib/data/products"
-import { getProductPrice } from "@lib/util/get-product-price"
 import { HttpTypes } from "@medusajs/types"
+import { Text } from "@medusajs/ui"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import Thumbnail from "../thumbnail"
-import PreviewPrice from "./price"
+import { convertToLocale } from "@lib/util/money"
+import ProductThumbnail from "../product-thumbnail"
 
-export default async function ProductPreview({
-  product,
-  isFeatured,
-  region,
-}: {
+type ProductPreviewProps = {
   product: HttpTypes.StoreProduct
-  isFeatured?: boolean
   region: HttpTypes.StoreRegion
-}) {
-  // const pricedProduct = await listProducts({
-  //   regionId: region.id,
-  //   queryParams: { id: [product.id!] },
-  // }).then(({ response }) => response.products[0])
+  isFeatured?: boolean
+}
 
-  // if (!pricedProduct) {
-  //   return null
-  // }
+const ProductPreview = ({
+  product,
+  region,
+  isFeatured,
+}: ProductPreviewProps) => {
+  const { variants } = product
 
-  const { cheapestPrice } = getProductPrice({
-    product,
-  })
+  const cheapestVariant = variants?.reduce((prev, curr) => {
+    return (prev.calculated_price?.calculated_amount || 0) <
+      (curr.calculated_price?.calculated_amount || 0)
+      ? prev
+      : curr
+  }, variants[0])
+
+  const price = cheapestVariant?.calculated_price
+  const amount = price?.calculated_amount
+  const currencyCode = price?.currency_code
 
   return (
     <LocalizedClientLink
       href={`/products/${product.handle}`}
-      className="group block hover:scale-[1.02] transition-all duration-500 rounded-lg"
+      className="group"
+      data-testid="product-preview-link"
     >
-      <div data-testid="product-wrapper" className="transform-gpu">
-        <div className="overflow-hidden rounded-lg">
-          <Thumbnail
-            thumbnail={product.thumbnail}
-            images={product.images}
-            size="full"
-            isFeatured={isFeatured}
-            className="group-hover:scale-[1.02] transition-all duration-500"
-          />
-        </div>
+      <div className="transform transition-all duration-300 hover:scale-[1.03]">
+        <ProductThumbnail product={product} isFeatured={isFeatured} />
         <div className="flex txt-compact-medium mt-4 justify-between">
-          <Text
-            className="text-ui-fg-subtle group-hover:text-ui-fg-base transition-colors duration-500"
-            data-testid="product-title"
-          >
+          <Text className="text-ui-fg-subtle group-hover:text-ui-fg-base transition-colors duration-300">
             {product.title}
           </Text>
-          <div className="flex items-center gap-x-2">
-            {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
-          </div>
+          <Text className="text-ui-fg-subtle group-hover:text-ui-fg-base transition-colors duration-300">
+            {amount &&
+              currencyCode &&
+              convertToLocale({
+                amount: amount,
+                currency_code: currencyCode,
+              })}
+          </Text>
         </div>
       </div>
     </LocalizedClientLink>
   )
 }
+
+export default ProductPreview

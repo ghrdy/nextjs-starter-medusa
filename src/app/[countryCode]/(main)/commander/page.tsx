@@ -1,5 +1,7 @@
 import { Metadata } from "next"
+import { Suspense } from "react"
 import CategoriesTemplate from "@modules/categories/templates/categories-template"
+import CategoriesLoading from "@modules/categories/components/loading"
 
 export const metadata: Metadata = {
   title: "Commander",
@@ -13,5 +15,9 @@ type Params = {
 }
 
 export default async function CommanderPage({ params }: Params) {
-  return <CategoriesTemplate countryCode={params.countryCode} />
+  return (
+    <Suspense fallback={<CategoriesLoading />}>
+      <CategoriesTemplate countryCode={params.countryCode} />
+    </Suspense>
+  )
 }
