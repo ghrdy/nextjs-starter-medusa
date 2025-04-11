@@ -115,6 +115,27 @@ const AddAddress = ({
                   data-testid="city-input"
                 />
               </div>
+              <CountrySelect
+                name="country_code"
+                autoComplete="country"
+                region={region}
+                required
+                data-testid="country-select"
+              />
+              <Input
+                label="Province / Région"
+                name="province"
+                required
+                autoComplete="address-level1"
+                data-testid="province-input"
+              />
+              <Input
+                label="Téléphone"
+                name="phone"
+                required
+                autoComplete="tel"
+                data-testid="phone-input"
+              />
             </div>
             {formState.error && (
               <div

@@ -29,8 +29,12 @@ const OrderCard = ({ order }: OrderCardProps) => {
         #<span data-testid="order-display-id">{order.display_id}</span>
       </div>
       <div className="flex items-center divide-x divide-gray-200 text-small-regular text-ui-fg-base">
-        <span className="pr-2" data-testid="order-created-at">
-          {new Date(order.created_at).toDateString()}
+        <span className="pr-2" data-testid="order-created-date">
+          {new Date(order.created_at).toLocaleDateString("fr-FR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </span>
         <span className="px-2" data-testid="order-amount">
           {convertToLocale({
@@ -39,7 +43,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
           })}
         </span>
         <span className="pl-2">{`${numberOfLines} ${
-          numberOfLines > 1 ? "items" : "item"
+          numberOfLines > 1 ? "produits" : "produit"
         }`}</span>
       </div>
       <div className="grid grid-cols-2 small:grid-cols-4 gap-4 my-4">
@@ -76,7 +80,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
       <div className="flex justify-end">
         <LocalizedClientLink href={`/account/orders/details/${order.id}`}>
           <Button data-testid="order-details-link" variant="secondary">
-            See details
+            Voir les détails
           </Button>
         </LocalizedClientLink>
       </div>
