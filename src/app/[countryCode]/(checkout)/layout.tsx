@@ -29,7 +29,7 @@ export default function CheckoutLayout({
             className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
             data-testid="store-link"
           >
-            <h1 className="uppercase">Medusa Store</h1>
+            <h1 className="uppercase">EEEEe</h1>
           </LocalizedClientLink>
           <div className="flex-1 basis-0" />
         </nav>

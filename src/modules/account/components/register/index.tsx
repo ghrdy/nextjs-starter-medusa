@@ -21,12 +21,9 @@ const Register = ({ setCurrentView }: Props) => {
       data-testid="register-page"
     >
       <h1 className="text-large-semi uppercase mb-6">
-        Devenez membre de Medusa Store
+        Devenez membre La Bella Vista
       </h1>
-      <p className="text-center text-base-regular text-ui-fg-base mb-4">
-        Créez votre profil de membre Medusa Store, et accédez à une expérience
-        shopping.
-      </p>
+
       <form className="w-full flex flex-col" action={formAction}>
         <div className="flex flex-col w-full gap-y-2">
           <Input
