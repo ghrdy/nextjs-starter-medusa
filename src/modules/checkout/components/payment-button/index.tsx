@@ -179,9 +179,7 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
         onClick={handlePayment}
         size="large"
         data-testid="submit-order-button"
-      >
-        Passer la commande
-      </Button>
+      ></Button>
       <ErrorMessage
         error={errorMessage}
         data-testid="manual-payment-error-message"
