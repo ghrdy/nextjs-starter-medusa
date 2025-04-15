@@ -15,8 +15,8 @@ export default async function Footer() {
   return (
     <footer className="border-t border-ui-border-base w-full">
       <div className="content-container flex flex-col w-full px-4 md:px-8">
-        <div className="flex flex-col gap-y-10 xsmall:flex-row items-start justify-between py-20">
-          <div className="w-full xsmall:w-1/3 flex flex-col justify-start items-start relative z-10 px-0 xsmall:px-4">
+        <div className="flex flex-row items-start justify-between py-10 md:py-20">
+          <div className="w-1/3 flex flex-col justify-start items-start relative z-10 px-1 md:px-4">
             {productCategories && productCategories?.length > 0 && (
               <div className="flex flex-col gap-y-2">
                 <span className="txt-small-plus txt-ui-fg-base">
@@ -50,9 +50,9 @@ export default async function Footer() {
               </div>
             )}
           </div>
-          <div className="w-full xsmall:w-1/3 flex justify-center items-center px-0 xsmall:px-4">
+          <div className="w-1/3 flex justify-center items-center px-1 md:px-4">
             <LocalizedClientLink href="/" className="hover:text-ui-fg-base">
-              <div className="h-32 sm:h-28 relative w-[260px] sm:w-64 z-0 flex items-center justify-center">
+              <div className="h-28 sm:h-32 md:h-40 relative w-[160px] sm:w-[200px] md:w-[300px] z-0 flex items-center justify-center">
                 <Image
                   src="/images/logo-seul.png"
                   alt="Bella Vista Restaurant"
@@ -60,15 +60,13 @@ export default async function Footer() {
                   style={{
                     objectFit: "contain",
                     objectPosition: "center",
-                    top: "82.5%",
-                    transform: "translateY(-50%) scale(3)",
                   }}
                   priority
                 />
               </div>
             </LocalizedClientLink>
           </div>
-          <div className="w-full xsmall:w-1/3 flex flex-col justify-start items-end relative z-10 px-0 xsmall:px-4">
+          <div className="w-1/3 flex flex-col justify-start items-end relative z-10 px-1 md:px-4">
             <div className="flex flex-col gap-y-2 items-end">
               <span className="txt-small-plus txt-ui-fg-base text-right">
                 Contact
@@ -87,12 +85,21 @@ export default async function Footer() {
                     href="https://goo.gl/maps/example"
                     target="_blank"
                     rel="noreferrer"
+                    className="text-xs sm:text-sm"
                   >
-                    Centre Commercial La Croix Verte,
-                    <br />
-                    Av. Charles de Gaulle,
-                    <br />
-                    Saint-Germain-lès-Corbeil 91250
+                    Centre Commercial
+                    <span className="hidden sm:inline">
+                      ,<br />
+                    </span>{" "}
+                    <span className="sm:hidden">-</span>
+                    <span className="hidden sm:inline">
+                      Av. Charles de Gaulle,
+                      <br />
+                    </span>
+                    <span className="sm:hidden">Saint-Germain</span>
+                    <span className="hidden sm:inline">
+                      Saint-Germain-lès-Corbeil 91250
+                    </span>
                   </a>
                 </li>
               </ul>
