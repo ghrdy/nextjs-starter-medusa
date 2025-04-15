@@ -120,10 +120,6 @@ export default function ProductToppings({
               // Utiliser la fonction d'extraction de prix
               const price = extractPrice(toppingVariant.calculated_price)
 
-              // Logs pour débugger
-              console.log(`[Selection] Topping: ${topping.title}`)
-              console.log(`[Selection] Extracted price:`, price)
-
               selectedToppings.push({
                 variantId: toppingVariant.id,
                 quantity,
@@ -138,7 +134,6 @@ export default function ProductToppings({
       // Utiliser JSON.stringify pour comparer les valeurs précédentes avec les nouvelles
       // afin d'éviter les mises à jour inutiles
       const toppingsJSON = JSON.stringify(selectedToppings)
-      console.log(`[Selection] Final toppings:`, selectedToppings)
 
       // Stocker la dernière valeur JSON pour comparaison
       // @ts-ignore - ignorer l'erreur de référence car useRef est correct
@@ -148,7 +143,7 @@ export default function ProductToppings({
         onToppingsChange(selectedToppings)
       }
     }
-  }, [toppingQuantities, toppingCategories]) // Retirer onToppingsChange des dépendances
+  }, [toppingQuantities, toppingCategories])
 
   // Référence pour stocker la dernière valeur des toppings sélectionnés
   const ref = useRef<string | null>(null)
@@ -166,23 +161,6 @@ export default function ProductToppings({
           queryParams: {},
           countryCode,
         })
-
-        // Log pour examiner la structure d'un produit topping
-        if (toppingsResult.response.products.length > 0) {
-          const firstProduct = toppingsResult.response.products[0]
-          console.log("=== DEBUG TOPPING STRUCTURE ===")
-          console.log("First topping product:", firstProduct)
-          console.log("First variant:", firstProduct.variants?.[0])
-          console.log(
-            "Calculated price:",
-            firstProduct.variants?.[0]?.calculated_price
-          )
-          console.log(
-            "Calculated price type:",
-            typeof firstProduct.variants?.[0]?.calculated_price
-          )
-          console.log("=== END DEBUG ===")
-        }
 
         // Filter toppings by collection handle
         const allToppings = toppingsResult.response.products.filter(
@@ -316,9 +294,6 @@ export default function ProductToppings({
 
                     // Utiliser la fonction d'extraction de prix
                     const price = extractPrice(toppingVariant?.calculated_price)
-
-                    // Logs simplifiés
-                    console.log(`Topping: ${topping.title}, Price: ${price}€`)
 
                     const formattedPrice = new Intl.NumberFormat("fr-FR", {
                       style: "currency",
