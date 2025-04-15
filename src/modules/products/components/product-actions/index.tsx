@@ -11,6 +11,7 @@ import { useParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import ProductPrice from "../product-price"
 import MobileActions from "./mobile-actions"
+import ProductToppings from "../product-toppings"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -29,6 +30,7 @@ const optionsAsKeymap = (
 
 export default function ProductActions({
   product,
+  region,
   disabled,
 }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
@@ -160,6 +162,10 @@ export default function ProductActions({
             ? "Victime de son succès"
             : "Ajouter au panier"}
         </Button>
+
+        {/* Toppings selector for pizzas */}
+        <ProductToppings product={product} region={region} />
+
         <MobileActions
           product={product}
           variant={selectedVariant}
