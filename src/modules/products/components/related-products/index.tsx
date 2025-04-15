@@ -18,36 +18,62 @@ export default async function RelatedProducts({
     return null
   }
 
-  // edit this function to define your related products logic
+  // Paramètres de requête pour trouver des produits similaires
   const queryParams: Record<string, any> = {}
+
   if (region?.id) {
     queryParams.region_id = region.id
   }
+
   if (product.collection_id) {
     queryParams.collection_id = [product.collection_id]
   }
+
   if (product.tags) {
     queryParams.tag_id = product.tags
       .map((t) => t.id)
       .filter(Boolean) as string[]
   }
+
+  // Exclure les cartes-cadeaux
   queryParams.is_giftcard = false
 
   const products = await listProducts({
     queryParams,
     countryCode,
   }).then(({ response }) => {
-    return response.products.filter(
-      (responseProduct) =>
-        // Exclure le produit actuel
-        responseProduct.id !== product.id &&
-        // Exclure les produits de la catégorie "Toppings"
-        !responseProduct.categories?.some(
-          (category) => category.name.toLowerCase() === "toppings"
+    return response.products.filter((responseProduct) => {
+      // Exclure le produit actuel
+      if (responseProduct.id === product.id) {
+        return false
+      }
+
+      // Exclure les produits de la catégorie "Toppings"
+      if (
+        responseProduct.categories?.some(
+          (category) =>
+            category.name.toLowerCase() === "toppings" ||
+            category.handle === "toppings"
         )
-    )
+      ) {
+        return false
+      }
+
+      // Exclure les produits des collections spécifiques liées aux suppléments
+      if (
+        responseProduct.collection?.title === "Suppléments Viandes" ||
+        responseProduct.collection?.title === "Suppléments Ingrédients" ||
+        responseProduct.collection?.handle === "toppings-viande" ||
+        responseProduct.collection?.handle === "toppings-ingredients"
+      ) {
+        return false
+      }
+
+      return true
+    })
   })
 
+  // Si aucun produit n'est trouvé après filtrage, ne pas afficher la section
   if (!products.length) {
     return null
   }
@@ -62,7 +88,7 @@ export default async function RelatedProducts({
       </div>
 
       <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8">
-        {products.map((product) => (
+        {products.slice(0, 4).map((product) => (
           <li key={product.id}>
             <Product region={region} product={product} />
           </li>
