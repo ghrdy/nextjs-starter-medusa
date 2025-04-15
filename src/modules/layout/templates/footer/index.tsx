@@ -71,12 +71,37 @@ export default async function Footer() {
               <span className="txt-small-plus txt-ui-fg-base text-right">
                 Contact
               </span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small text-right">
+              <div className="flex flex-col gap-2 sm:hidden">
+                <a
+                  href="tel:+33169648029"
+                  className="txt-small text-ui-fg-subtle hover:text-ui-fg-base text-right"
+                >
+                  Téléphone
+                </a>
+                <a
+                  href="mailto:contact@labellavista.fr"
+                  className="txt-small text-ui-fg-subtle hover:text-ui-fg-base text-right"
+                >
+                  Mail
+                </a>
+                <a
+                  href="https://goo.gl/maps/example"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="txt-small text-ui-fg-subtle hover:text-ui-fg-base text-right"
+                >
+                  Adresse
+                </a>
+              </div>
+              <ul className="hidden sm:grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small text-right">
                 <li className="hover:text-ui-fg-base">
                   <a href="tel:+33169648029">01.69.64.80.29</a>
                 </li>
                 <li className="hover:text-ui-fg-base">
-                  <a href="mailto:contact@labellavista.fr">
+                  <a
+                    href="mailto:contact@labellavista.fr"
+                    className="inline-block max-w-[150px] sm:max-w-none truncate sm:text-right overflow-hidden"
+                  >
                     contact@labellavista.fr
                   </a>
                 </li>
@@ -87,19 +112,13 @@ export default async function Footer() {
                     rel="noreferrer"
                     className="text-xs sm:text-sm"
                   >
-                    Centre Commercial
-                    <span className="hidden sm:inline">
-                      ,<br />
-                    </span>{" "}
-                    <span className="sm:hidden">-</span>
+                    Centre Commercial La Croix Verte,
+                    <br />
                     <span className="hidden sm:inline">
                       Av. Charles de Gaulle,
                       <br />
                     </span>
-                    <span className="sm:hidden">Saint-Germain</span>
-                    <span className="hidden sm:inline">
-                      Saint-Germain-lès-Corbeil 91250
-                    </span>
+                    Saint-Germain-lès-Corbeil 91250
                   </a>
                 </li>
               </ul>
