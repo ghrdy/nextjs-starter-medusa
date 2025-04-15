@@ -27,7 +27,11 @@ const Item = ({ item, currencyCode }: ItemProps) => {
         >
           {item.title}
         </Text>
-        <LineItemOptions variant={item.variant} data-testid="product-variant" />
+        <LineItemOptions
+          variant={item.variant}
+          item={item}
+          data-testid="product-variant"
+        />
       </Table.Cell>
 
       <Table.Cell className="!pr-0">

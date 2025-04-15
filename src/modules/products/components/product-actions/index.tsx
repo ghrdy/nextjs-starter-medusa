@@ -11,7 +11,7 @@ import { useParams } from "next/navigation"
 import { useEffect, useMemo, useRef, useState } from "react"
 import ProductPrice from "../product-price"
 import MobileActions from "./mobile-actions"
-import ProductToppings from "../product-toppings"
+import ProductToppings, { ToppingSelection } from "../product-toppings"
 
 type ProductActionsProps = {
   product: HttpTypes.StoreProduct
@@ -35,6 +35,9 @@ export default function ProductActions({
 }: ProductActionsProps) {
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const [isAdding, setIsAdding] = useState(false)
+  const [selectedToppings, setSelectedToppings] = useState<ToppingSelection[]>(
+    []
+  )
   const countryCode = useParams().countryCode as string
 
   // If there is only 1 variant, preselect the options
@@ -100,16 +103,35 @@ export default function ProductActions({
 
   const inView = useIntersection(actionsRef, "0px")
 
+  // Gestionnaire pour les changements de toppings
+  const handleToppingsChange = (toppings: ToppingSelection[]) => {
+    setSelectedToppings(toppings)
+  }
+
   // add the selected variant to the cart
   const handleAddToCart = async () => {
     if (!selectedVariant?.id) return null
 
     setIsAdding(true)
 
+    // Préparer les données des toppings pour les metadata
+    const toppingsData =
+      selectedToppings.length > 0
+        ? {
+            toppings: selectedToppings.map((topping) => ({
+              id: topping.variantId,
+              quantity: topping.quantity,
+              title: topping.title,
+              price: topping.price,
+            })),
+          }
+        : undefined
+
     await addToCart({
       variantId: selectedVariant.id,
       quantity: 1,
       countryCode,
+      metadata: toppingsData,
     })
 
     setIsAdding(false)
@@ -164,7 +186,11 @@ export default function ProductActions({
         </Button>
 
         {/* Toppings selector for pizzas */}
-        <ProductToppings product={product} region={region} />
+        <ProductToppings
+          product={product}
+          region={region}
+          onToppingsChange={handleToppingsChange}
+        />
 
         <MobileActions
           product={product}

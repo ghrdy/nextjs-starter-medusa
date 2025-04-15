@@ -4,7 +4,7 @@ import { listProducts } from "@lib/data/products"
 import { addToCart } from "@lib/data/cart"
 import { Button } from "@medusajs/ui"
 import { HttpTypes } from "@medusajs/types"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useParams } from "next/navigation"
 import { Dialog, Transition } from "@headlessui/react"
 import { Fragment } from "react"
@@ -12,6 +12,7 @@ import { Fragment } from "react"
 type ProductToppingsProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
+  onToppingsChange?: (toppings: ToppingSelection[]) => void
 }
 
 type ToppingCategory = {
@@ -25,21 +26,26 @@ type ToppingQuantities = {
   [variantId: string]: number
 }
 
+// Représentation d'un topping sélectionné
+export type ToppingSelection = {
+  variantId: string
+  quantity: number
+  title: string
+  price: number
+}
+
 export default function ProductToppings({
   product,
   region,
+  onToppingsChange,
 }: ProductToppingsProps) {
   const [isLoading, setIsLoading] = useState(true)
-  const [isAddingTopping, setIsAddingTopping] = useState<string | null>(null)
-  const [isRemovingTopping, setIsRemovingTopping] = useState<string | null>(
-    null
-  )
   const [isExpanded, setIsExpanded] = useState(false)
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
   const [toppingCategories, setToppingCategories] = useState<ToppingCategory[]>(
     []
   )
-  // Suivi des quantités de toppings ajoutés
+  // Suivi des quantités de toppings sélectionnés localement
   const [toppingQuantities, setToppingQuantities] = useState<ToppingQuantities>(
     {}
   )
@@ -68,6 +74,47 @@ export default function ProductToppings({
   // if (!isPizza) {
   //   return null
   // }
+
+  // Notifier le parent lorsque les toppings changent
+  useEffect(() => {
+    if (onToppingsChange) {
+      const selectedToppings: ToppingSelection[] = []
+
+      // Parcourir toutes les catégories de toppings
+      toppingCategories.forEach((category) => {
+        category.products.forEach((topping) => {
+          const toppingVariant = topping.variants?.[0]
+          if (toppingVariant?.id) {
+            const quantity = toppingQuantities[toppingVariant.id] || 0
+
+            if (quantity > 0) {
+              selectedToppings.push({
+                variantId: toppingVariant.id,
+                quantity,
+                title: topping.title || "Topping",
+                price: Number(toppingVariant.calculated_price) || 0,
+              })
+            }
+          }
+        })
+      })
+
+      // Utiliser JSON.stringify pour comparer les valeurs précédentes avec les nouvelles
+      // afin d'éviter les mises à jour inutiles
+      const toppingsJSON = JSON.stringify(selectedToppings)
+
+      // Stocker la dernière valeur JSON pour comparaison
+      // @ts-ignore - ignorer l'erreur de référence car useRef est correct
+      if (!ref.current || ref.current !== toppingsJSON) {
+        // @ts-ignore
+        ref.current = toppingsJSON
+        onToppingsChange(selectedToppings)
+      }
+    }
+  }, [toppingQuantities, toppingCategories]) // Retirer onToppingsChange des dépendances
+
+  // Référence pour stocker la dernière valeur des toppings sélectionnés
+  const ref = useRef<string | null>(null)
 
   useEffect(() => {
     const fetchToppings = async () => {
@@ -129,120 +176,53 @@ export default function ProductToppings({
     fetchToppings()
   }, [countryCode])
 
-  // Ajouter un topping
-  const handleAddTopping = async (toppingVariantId: string) => {
+  // Ajouter un topping localement (sans l'ajouter au panier pour l'instant)
+  const handleAddTopping = (toppingVariantId: string) => {
     if (!toppingVariantId) return
 
-    setIsAddingTopping(toppingVariantId)
-
-    try {
-      // Mettre à jour le compteur localement d'abord
-      setToppingQuantities((prev) => {
-        const currentQuantity = prev[toppingVariantId] || 0
-        return {
-          ...prev,
-          [toppingVariantId]: currentQuantity + 1,
-        }
-      })
-
-      // Puis ajouter au panier
-      await addToCart({
-        variantId: toppingVariantId,
-        quantity: 1,
-        countryCode,
-      })
-    } catch (error) {
-      console.error("Error adding topping to cart:", error)
-      // Annuler la mise à jour locale en cas d'erreur
-      setToppingQuantities((prev) => {
-        const currentQuantity = prev[toppingVariantId] || 0
-        if (currentQuantity <= 1) {
-          const { [toppingVariantId]: _, ...rest } = prev
-          return rest
-        }
-        return {
-          ...prev,
-          [toppingVariantId]: currentQuantity - 1,
-        }
-      })
-    } finally {
-      setIsAddingTopping(null)
-    }
+    // Mettre à jour le compteur localement
+    setToppingQuantities((prev) => {
+      const currentQuantity = prev[toppingVariantId] || 0
+      return {
+        ...prev,
+        [toppingVariantId]: currentQuantity + 1,
+      }
+    })
   }
 
-  // Enlever un topping
-  const handleRemoveTopping = async (toppingVariantId: string) => {
+  // Enlever un topping localement
+  const handleRemoveTopping = (toppingVariantId: string) => {
     if (!toppingVariantId) return
 
     const currentQuantity = toppingQuantities[toppingVariantId] || 0
     if (currentQuantity === 0) return
 
-    setIsRemovingTopping(toppingVariantId)
-
-    try {
-      // Mettre à jour le compteur localement d'abord
-      setToppingQuantities((prev) => {
-        const updatedQuantity = Math.max(0, (prev[toppingVariantId] || 0) - 1)
-        if (updatedQuantity === 0) {
-          const { [toppingVariantId]: _, ...rest } = prev
-          return rest
-        }
-        return {
-          ...prev,
-          [toppingVariantId]: updatedQuantity,
-        }
-      })
-
-      // Puis enlever du panier (en réalité on ajoute avec quantité négative)
-      await addToCart({
-        variantId: toppingVariantId,
-        quantity: -1,
-        countryCode,
-      })
-    } catch (error) {
-      console.error("Error removing topping from cart:", error)
-      // Rétablir la quantité précédente en cas d'erreur
-      setToppingQuantities((prev) => ({
+    // Mettre à jour le compteur localement
+    setToppingQuantities((prev) => {
+      const updatedQuantity = Math.max(0, (prev[toppingVariantId] || 0) - 1)
+      if (updatedQuantity === 0) {
+        const { [toppingVariantId]: _, ...rest } = prev
+        return rest
+      }
+      return {
         ...prev,
-        [toppingVariantId]: currentQuantity,
-      }))
-    } finally {
-      setIsRemovingTopping(null)
-    }
+        [toppingVariantId]: updatedQuantity,
+      }
+    })
   }
 
   // Supprimer complètement un topping
-  const handleDeleteTopping = async (toppingVariantId: string) => {
+  const handleDeleteTopping = (toppingVariantId: string) => {
     if (!toppingVariantId) return
 
     const currentQuantity = toppingQuantities[toppingVariantId] || 0
     if (currentQuantity === 0) return
 
-    setIsRemovingTopping(toppingVariantId)
-
-    try {
-      // Supprimer du state local
-      setToppingQuantities((prev) => {
-        const { [toppingVariantId]: _, ...rest } = prev
-        return rest
-      })
-
-      // Puis enlever complètement du panier (quantité négative pour compenser l'ajout)
-      await addToCart({
-        variantId: toppingVariantId,
-        quantity: -currentQuantity,
-        countryCode,
-      })
-    } catch (error) {
-      console.error("Error deleting topping from cart:", error)
-      // Rétablir la quantité précédente en cas d'erreur
-      setToppingQuantities((prev) => ({
-        ...prev,
-        [toppingVariantId]: currentQuantity,
-      }))
-    } finally {
-      setIsRemovingTopping(null)
-    }
+    // Supprimer du state local
+    setToppingQuantities((prev) => {
+      const { [toppingVariantId]: _, ...rest } = prev
+      return rest
+    })
   }
 
   const openToppings = () => {
@@ -303,7 +283,6 @@ export default function ProductToppings({
                                 variant="secondary"
                                 size="small"
                                 className="h-8 w-8 flex items-center justify-center p-0"
-                                isLoading={isRemovingTopping === variantId}
                                 onClick={() => handleRemoveTopping(variantId)}
                               >
                                 -
@@ -315,7 +294,6 @@ export default function ProductToppings({
                                 variant="secondary"
                                 size="small"
                                 className="h-8 w-8 flex items-center justify-center p-0"
-                                isLoading={isAddingTopping === variantId}
                                 onClick={() => handleAddTopping(variantId)}
                               >
                                 +
@@ -324,7 +302,6 @@ export default function ProductToppings({
                                 variant="danger"
                                 size="small"
                                 className="h-8 w-8 flex items-center justify-center p-0 ml-1"
-                                isLoading={isRemovingTopping === variantId}
                                 onClick={() => handleDeleteTopping(variantId)}
                               >
                                 <svg
@@ -346,7 +323,6 @@ export default function ProductToppings({
                             <Button
                               variant="secondary"
                               size="small"
-                              isLoading={isAddingTopping === variantId}
                               onClick={() => handleAddTopping(variantId)}
                             >
                               +
