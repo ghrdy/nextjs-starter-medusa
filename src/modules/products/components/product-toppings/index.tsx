@@ -20,16 +20,28 @@ type ToppingCategory = {
   products: HttpTypes.StoreProduct[]
 }
 
+// Structure pour suivre les quantités de toppings
+type ToppingQuantities = {
+  [variantId: string]: number
+}
+
 export default function ProductToppings({
   product,
   region,
 }: ProductToppingsProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [isAddingTopping, setIsAddingTopping] = useState<string | null>(null)
+  const [isRemovingTopping, setIsRemovingTopping] = useState<string | null>(
+    null
+  )
   const [isExpanded, setIsExpanded] = useState(false)
   const [isMobileModalOpen, setIsMobileModalOpen] = useState(false)
   const [toppingCategories, setToppingCategories] = useState<ToppingCategory[]>(
     []
+  )
+  // Suivi des quantités de toppings ajoutés
+  const [toppingQuantities, setToppingQuantities] = useState<ToppingQuantities>(
+    {}
   )
   const countryCode = useParams().countryCode as string
 
@@ -117,12 +129,23 @@ export default function ProductToppings({
     fetchToppings()
   }, [countryCode])
 
+  // Ajouter un topping
   const handleAddTopping = async (toppingVariantId: string) => {
     if (!toppingVariantId) return
 
     setIsAddingTopping(toppingVariantId)
 
     try {
+      // Mettre à jour le compteur localement d'abord
+      setToppingQuantities((prev) => {
+        const currentQuantity = prev[toppingVariantId] || 0
+        return {
+          ...prev,
+          [toppingVariantId]: currentQuantity + 1,
+        }
+      })
+
+      // Puis ajouter au panier
       await addToCart({
         variantId: toppingVariantId,
         quantity: 1,
@@ -130,8 +153,95 @@ export default function ProductToppings({
       })
     } catch (error) {
       console.error("Error adding topping to cart:", error)
+      // Annuler la mise à jour locale en cas d'erreur
+      setToppingQuantities((prev) => {
+        const currentQuantity = prev[toppingVariantId] || 0
+        if (currentQuantity <= 1) {
+          const { [toppingVariantId]: _, ...rest } = prev
+          return rest
+        }
+        return {
+          ...prev,
+          [toppingVariantId]: currentQuantity - 1,
+        }
+      })
     } finally {
       setIsAddingTopping(null)
+    }
+  }
+
+  // Enlever un topping
+  const handleRemoveTopping = async (toppingVariantId: string) => {
+    if (!toppingVariantId) return
+
+    const currentQuantity = toppingQuantities[toppingVariantId] || 0
+    if (currentQuantity === 0) return
+
+    setIsRemovingTopping(toppingVariantId)
+
+    try {
+      // Mettre à jour le compteur localement d'abord
+      setToppingQuantities((prev) => {
+        const updatedQuantity = Math.max(0, (prev[toppingVariantId] || 0) - 1)
+        if (updatedQuantity === 0) {
+          const { [toppingVariantId]: _, ...rest } = prev
+          return rest
+        }
+        return {
+          ...prev,
+          [toppingVariantId]: updatedQuantity,
+        }
+      })
+
+      // Puis enlever du panier (en réalité on ajoute avec quantité négative)
+      await addToCart({
+        variantId: toppingVariantId,
+        quantity: -1,
+        countryCode,
+      })
+    } catch (error) {
+      console.error("Error removing topping from cart:", error)
+      // Rétablir la quantité précédente en cas d'erreur
+      setToppingQuantities((prev) => ({
+        ...prev,
+        [toppingVariantId]: currentQuantity,
+      }))
+    } finally {
+      setIsRemovingTopping(null)
+    }
+  }
+
+  // Supprimer complètement un topping
+  const handleDeleteTopping = async (toppingVariantId: string) => {
+    if (!toppingVariantId) return
+
+    const currentQuantity = toppingQuantities[toppingVariantId] || 0
+    if (currentQuantity === 0) return
+
+    setIsRemovingTopping(toppingVariantId)
+
+    try {
+      // Supprimer du state local
+      setToppingQuantities((prev) => {
+        const { [toppingVariantId]: _, ...rest } = prev
+        return rest
+      })
+
+      // Puis enlever complètement du panier (quantité négative pour compenser l'ajout)
+      await addToCart({
+        variantId: toppingVariantId,
+        quantity: -currentQuantity,
+        countryCode,
+      })
+    } catch (error) {
+      console.error("Error deleting topping from cart:", error)
+      // Rétablir la quantité précédente en cas d'erreur
+      setToppingQuantities((prev) => ({
+        ...prev,
+        [toppingVariantId]: currentQuantity,
+      }))
+    } finally {
+      setIsRemovingTopping(null)
     }
   }
 
@@ -167,6 +277,8 @@ export default function ProductToppings({
                 <div className="grid grid-cols-1 gap-2">
                   {category.products.map((topping) => {
                     const toppingVariant = topping.variants?.[0]
+                    const variantId = toppingVariant?.id ?? ""
+                    const quantity = toppingQuantities[variantId] || 0
                     const price = toppingVariant?.calculated_price ?? 0
                     const formattedPrice = new Intl.NumberFormat("fr-FR", {
                       style: "currency",
@@ -184,16 +296,63 @@ export default function ProductToppings({
                             {formattedPrice}
                           </span>
                         </div>
-                        <Button
-                          variant="secondary"
-                          size="small"
-                          isLoading={isAddingTopping === toppingVariant?.id}
-                          onClick={() =>
-                            handleAddTopping(toppingVariant?.id ?? "")
-                          }
-                        >
-                          +
-                        </Button>
+                        <div className="flex items-center space-x-2">
+                          {quantity > 0 && (
+                            <>
+                              <Button
+                                variant="secondary"
+                                size="small"
+                                className="h-8 w-8 flex items-center justify-center p-0"
+                                isLoading={isRemovingTopping === variantId}
+                                onClick={() => handleRemoveTopping(variantId)}
+                              >
+                                -
+                              </Button>
+                              <span className="text-sm w-6 text-center">
+                                {quantity}
+                              </span>
+                              <Button
+                                variant="secondary"
+                                size="small"
+                                className="h-8 w-8 flex items-center justify-center p-0"
+                                isLoading={isAddingTopping === variantId}
+                                onClick={() => handleAddTopping(variantId)}
+                              >
+                                +
+                              </Button>
+                              <Button
+                                variant="danger"
+                                size="small"
+                                className="h-8 w-8 flex items-center justify-center p-0 ml-1"
+                                isLoading={isRemovingTopping === variantId}
+                                onClick={() => handleDeleteTopping(variantId)}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-4 w-4"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              </Button>
+                            </>
+                          )}
+                          {quantity === 0 && (
+                            <Button
+                              variant="secondary"
+                              size="small"
+                              isLoading={isAddingTopping === variantId}
+                              onClick={() => handleAddTopping(variantId)}
+                            >
+                              +
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     )
                   })}
