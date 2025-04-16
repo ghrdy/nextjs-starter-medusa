@@ -471,3 +471,59 @@ export async function listCartOptions() {
     cache: "force-cache",
   })
 }
+
+export async function updateLineItemMetadata({
+  lineId,
+  metadata,
+}: {
+  lineId: string
+  metadata: Record<string, unknown>
+}) {
+  if (!lineId) {
+    throw new Error("Missing lineItem ID when updating line item metadata")
+  }
+
+  const cartId = await getCartId()
+
+  if (!cartId) {
+    throw new Error("Missing cart ID when updating line item metadata")
+  }
+
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  // On utilise l'endpoint de mise à jour des éléments du panier pour modifier les métadonnées
+  // La quantité sera maintenue à la même valeur
+  // On doit d'abord récupérer la quantité actuelle
+  try {
+    const cart = await retrieveCart(cartId)
+    if (!cart || !cart.items) {
+      throw new Error("Error retrieving cart")
+    }
+
+    const lineItem = cart.items.find(item => item.id === lineId)
+    if (!lineItem) {
+      throw new Error("Line item not found in cart")
+    }
+
+    await sdk.store.cart
+      .updateLineItem(cartId, lineId, { 
+        quantity: lineItem.quantity,
+        metadata,
+      }, {}, headers)
+      .then(async () => {
+        const cartCacheTag = await getCacheTag("carts")
+        revalidateTag(cartCacheTag)
+
+        const fulfillmentCacheTag = await getCacheTag("fulfillment")
+        revalidateTag(fulfillmentCacheTag)
+      })
+      .catch(medusaError)
+
+    return true
+  } catch (error) {
+    console.error("Error updating line item metadata:", error)
+    throw error
+  }
+}

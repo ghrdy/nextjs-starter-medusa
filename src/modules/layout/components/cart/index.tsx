@@ -15,6 +15,7 @@ import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { convertToLocale } from "@lib/util/money"
 import { deleteLineItem, updateLineItem } from "@lib/data/cart"
+import LineItemOptions from "@modules/common/components/line-item-options"
 
 // Composant interne pour ImagePlaceholder
 const ImagePlaceholder = ({ name = "" }: { name?: string }) => {
@@ -23,6 +24,74 @@ const ImagePlaceholder = ({ name = "" }: { name?: string }) => {
   return (
     <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-500 font-medium">
       {displayName}
+    </div>
+  )
+}
+
+// Structure minimale des toppings dans les metadata
+type ToppingMetadata = {
+  variant_id: string
+  quantity: number
+}
+
+// Composant pour afficher les toppings en format compact (sur une ligne)
+const CompactToppingsInfo = ({
+  item,
+  closeCart,
+}: {
+  item: HttpTypes.StoreCartLineItem
+  closeCart: () => void
+}) => {
+  const toppings = item?.metadata?.toppings as ToppingMetadata[] | undefined
+  const [isUpdating, setIsUpdating] = useState(false)
+  const lastToppingsRef = useRef<string>(JSON.stringify(toppings || []))
+
+  // Vérifier si les toppings ont changé
+  useEffect(() => {
+    const currentToppingsStr = JSON.stringify(toppings || [])
+    if (currentToppingsStr !== lastToppingsRef.current) {
+      // Afficher brièvement un indicateur de mise à jour
+      setIsUpdating(true)
+      const timer = setTimeout(() => {
+        setIsUpdating(false)
+        lastToppingsRef.current = currentToppingsStr
+      }, 1500)
+
+      return () => clearTimeout(timer)
+    }
+  }, [toppings])
+
+  if (!toppings || toppings.length === 0) {
+    return null
+  }
+
+  // Fonction pour éditer les toppings en redirigeant vers la page du produit
+  const handleEditToppings = () => {
+    closeCart()
+  }
+
+  return (
+    <div className="text-xs text-gray-600 mb-2 flex flex-wrap items-center">
+      <span className="font-medium mr-1">Suppléments:</span>
+      <span className="truncate mr-1">
+        {toppings.map((t, i) => (
+          <span key={i}>
+            {t.quantity}x {`Ingrédient ${i + 1}`}
+            {i < toppings.length - 1 ? ", " : ""}
+          </span>
+        ))}
+      </span>
+      <LocalizedClientLink
+        href={`/products/${item.product_handle}?edit_toppings=true&line_item=${item.id}`}
+        onClick={handleEditToppings}
+        className={`ml-auto text-xs px-2 py-0.5 rounded-md transition-colors ${
+          isUpdating
+            ? "bg-green-100 text-green-700 animate-pulse"
+            : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+        }`}
+      >
+        {isUpdating ? "Mis à jour..." : "Modifier"}
+      </LocalizedClientLink>
     </div>
   )
 }
@@ -463,6 +532,13 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                                     .join(", ")}
                                 </p>
                               )}
+
+                              {/* Affichage des toppings en format compact */}
+                              <CompactToppingsInfo
+                                item={item}
+                                closeCart={closeCart}
+                              />
+
                               <div className="flex justify-between items-center mt-2">
                                 <div className="flex items-center space-x-1">
                                   <button

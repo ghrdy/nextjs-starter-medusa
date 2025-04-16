@@ -26,9 +26,9 @@ const LineItemOptions = ({
 
   return (
     <div data-testid={dataTestid} data-value={dataValue}>
-      <Text className="inline-block txt-medium text-ui-fg-subtle w-full overflow-hidden text-ellipsis">
+      {/* <Text className="inline-block txt-medium text-ui-fg-subtle w-full overflow-hidden text-ellipsis">
         Recette: {variant?.title}
-      </Text>
+      </Text> */}
 
       {/* Afficher les toppings s'ils existent */}
       {toppings && toppings.length > 0 && (
