@@ -10,12 +10,13 @@ import {
   FaShoppingCart,
 } from "react-icons/fa"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { convertToLocale } from "@lib/util/money"
 import { deleteLineItem, updateLineItem } from "@lib/data/cart"
 import LineItemOptions from "@modules/common/components/line-item-options"
+import CompactToppingsInfo from "@modules/common/components/compact-toppings-info"
+import { hasToppings } from "@lib/util/cart-helpers"
 
 // Composant interne pour ImagePlaceholder
 const ImagePlaceholder = ({ name = "" }: { name?: string }) => {
@@ -35,83 +36,36 @@ type ToppingMetadata = {
 }
 
 // Fonction utilitaire pour vérifier si un élément du panier a des toppings
-const hasToppings = (item: HttpTypes.StoreCartLineItem): boolean => {
-  const toppings = item?.metadata?.toppings as ToppingMetadata[] | undefined
-  return Boolean(toppings && Array.isArray(toppings) && toppings.length > 0)
-}
-
-// Composant pour afficher les toppings en format compact (sur une ligne)
-const CompactToppingsInfo = ({
-  item,
-  closeCart,
-}: {
-  item: HttpTypes.StoreCartLineItem
-  closeCart: () => void
-}) => {
-  const toppings = item?.metadata?.toppings as ToppingMetadata[] | undefined
-  const [isUpdating, setIsUpdating] = useState(false)
-  const lastToppingsRef = useRef<string>(JSON.stringify(toppings || []))
-
-  // Vérifier si les toppings ont changé
-  useEffect(() => {
-    const currentToppingsStr = JSON.stringify(toppings || [])
-    if (currentToppingsStr !== lastToppingsRef.current) {
-      // Afficher brièvement un indicateur de mise à jour
-      setIsUpdating(true)
-      const timer = setTimeout(() => {
-        setIsUpdating(false)
-        lastToppingsRef.current = currentToppingsStr
-      }, 1500)
-
-      return () => clearTimeout(timer)
-    }
-  }, [toppings])
-
-  if (!toppings || toppings.length === 0) {
-    return null
-  }
-
-  // Fonction pour éditer les toppings en redirigeant vers la page du produit
-  const handleEditToppings = () => {
-    closeCart()
-  }
-
-  return (
-    <div className="text-xs text-gray-600 mb-2 overflow-hidden">
-      <div className="flex items-center mb-1">
-        <span className="font-medium">Suppléments:</span>
-      </div>
-      <div className="grid grid-cols-2 gap-x-1 gap-y-1">
-        {toppings.map((t, i) => (
-          <span key={i} className="truncate">
-            {t.quantity}x {`Ingrédient ${i + 1}`}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
+// Déplacée dans le fichier d'utilitaires pour éviter les problèmes HMR
 
 const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   // Tous les hooks doivent être appelés inconditionnellement et toujours dans le même ordre
-  const pathnameFromHook = usePathname()
   const routeTransitionRef = useRef(false)
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  // Utiliser un état local pour stocker le pathname et l'initialiser côté client
+  // Utiliser un état local pour stocker le pathname et l'initialiser côté client uniquement
   const [pathname, setPathname] = useState("")
 
-  // Mettre à jour le pathname après le montage
+  // Mettre à jour le pathname après le montage, en utilisant window.location côté client uniquement
   useEffect(() => {
-    if (pathnameFromHook) {
-      setPathname(pathnameFromHook)
-    } else if (typeof window !== "undefined") {
-      // Fallback sur window.location.pathname
+    if (!mounted) return
+    // Only access window object after mounting (client-side only)
+    setPathname(window.location.pathname)
+
+    // Fonction pour mettre à jour le pathname lors des changements d'URL
+    const handleLocationChange = () => {
       setPathname(window.location.pathname)
     }
-  }, [pathnameFromHook, mounted])
+
+    // Écouter les événements de navigation
+    window.addEventListener("popstate", handleLocationChange)
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange)
+    }
+  }, [mounted])
 
   const totalItems =
     cartState?.items?.reduce((acc, item) => {
@@ -127,12 +81,10 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   const toggleTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isTogglingRef = useRef<boolean>(false)
 
-  // Vérification si on est sur une page de checkout - après l'appel de tous les hooks
-  const isCheckoutPage =
-    mounted && pathname ? pathname.startsWith("/checkout") : false
-
-  // Vérifier si on est sur la page du panier
-  const isCartPage = mounted && pathname ? pathname.endsWith("/cart") : false
+  // Vérification si on est sur une page de checkout ou sur la page du panier
+  // Ces vérifications sont utilisées plus tard dans un rendu conditionnel
+  const isCheckoutPage = mounted && pathname?.startsWith("/checkout")
+  const isCartPage = mounted && pathname?.endsWith("/cart")
 
   // Fonction pour fermer le panier
   const closeCart = () => setIsOpen(false)
@@ -298,7 +250,13 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
 
   // Après tous les hooks et avant le return principal, on peut ajouter notre condition
   // Si on est sur une page de checkout ou sur la page du panier, ne pas afficher le panier
-  if (isCheckoutPage || isCartPage || !mounted) {
+  // Si le composant n'est pas monté, return null pour éviter le rendu serveur
+  if (!mounted) {
+    return null // Retour immédiat pendant le rendu serveur initial
+  }
+
+  // Après le montage, on peut vérifier en toute sécurité les chemins
+  if (isCheckoutPage || isCartPage) {
     return null
   }
 
