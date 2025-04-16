@@ -34,6 +34,12 @@ type ToppingMetadata = {
   quantity: number
 }
 
+// Fonction utilitaire pour vérifier si un élément du panier a des toppings
+const hasToppings = (item: HttpTypes.StoreCartLineItem): boolean => {
+  const toppings = item?.metadata?.toppings as ToppingMetadata[] | undefined
+  return Boolean(toppings && Array.isArray(toppings) && toppings.length > 0)
+}
+
 // Composant pour afficher les toppings en format compact (sur une ligne)
 const CompactToppingsInfo = ({
   item,
@@ -71,38 +77,41 @@ const CompactToppingsInfo = ({
   }
 
   return (
-    <div className="text-xs text-gray-600 mb-2 flex flex-wrap items-center">
-      <span className="font-medium mr-1">Suppléments:</span>
-      <span className="truncate mr-1">
+    <div className="text-xs text-gray-600 mb-2 overflow-hidden">
+      <div className="flex items-center mb-1">
+        <span className="font-medium">Suppléments:</span>
+      </div>
+      <div className="grid grid-cols-2 gap-x-1 gap-y-1">
         {toppings.map((t, i) => (
-          <span key={i}>
+          <span key={i} className="truncate">
             {t.quantity}x {`Ingrédient ${i + 1}`}
-            {i < toppings.length - 1 ? ", " : ""}
           </span>
         ))}
-      </span>
-      <LocalizedClientLink
-        href={`/products/${item.product_handle}?edit_toppings=true&line_item=${item.id}&redirect_to=cart`}
-        onClick={handleEditToppings}
-        className={`ml-auto text-xs px-2 py-0.5 rounded-md transition-colors ${
-          isUpdating
-            ? "bg-green-100 text-green-700 animate-pulse"
-            : "bg-gray-200 hover:bg-gray-300 text-gray-700"
-        }`}
-      >
-        {isUpdating ? "Mis à jour..." : "Modifier"}
-      </LocalizedClientLink>
+      </div>
     </div>
   )
 }
 
 const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   // Tous les hooks doivent être appelés inconditionnellement et toujours dans le même ordre
-  const pathname = usePathname()
+  const pathnameFromHook = usePathname()
   const routeTransitionRef = useRef(false)
   const [mounted, setMounted] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  // Utiliser un état local pour stocker le pathname et l'initialiser côté client
+  const [pathname, setPathname] = useState("")
+
+  // Mettre à jour le pathname après le montage
+  useEffect(() => {
+    if (pathnameFromHook) {
+      setPathname(pathnameFromHook)
+    } else if (typeof window !== "undefined") {
+      // Fallback sur window.location.pathname
+      setPathname(window.location.pathname)
+    }
+  }, [pathnameFromHook, mounted])
 
   const totalItems =
     cartState?.items?.reduce((acc, item) => {
@@ -119,10 +128,11 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
   const isTogglingRef = useRef<boolean>(false)
 
   // Vérification si on est sur une page de checkout - après l'appel de tous les hooks
-  const isCheckoutPage = pathname?.startsWith("/checkout")
+  const isCheckoutPage =
+    mounted && pathname ? pathname.startsWith("/checkout") : false
 
   // Vérifier si on est sur la page du panier
-  const isCartPage = pathname?.endsWith("/cart")
+  const isCartPage = mounted && pathname ? pathname.endsWith("/cart") : false
 
   // Fonction pour fermer le panier
   const closeCart = () => setIsOpen(false)
@@ -462,7 +472,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                         return (
                           <motion.li
                             key={item.id}
-                            className="flex gap-3 p-3 bg-gray-50 rounded-xl"
+                            className="flex gap-3 p-3 bg-gray-50 rounded-xl overflow-hidden"
                             layout
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -517,16 +527,29 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                             </div>
 
                             {/* Item details */}
-                            <div className="flex-1">
-                              <h3 className="font-medium text-black">
-                                <LocalizedClientLink
-                                  href={`/products/${item.product_handle}`}
-                                >
-                                  {item.title}
-                                </LocalizedClientLink>
-                              </h3>
+                            <div className="flex-1 min-w-0 overflow-hidden">
+                              <div className="flex items-center justify-between">
+                                <h3 className="font-medium text-black truncate mr-1">
+                                  <LocalizedClientLink
+                                    href={`/products/${item.product_handle}`}
+                                  >
+                                    {item.title}
+                                  </LocalizedClientLink>
+                                </h3>
+
+                                {/* Bouton Modifier (seulement s'il y a des toppings) */}
+                                {hasToppings(item) && (
+                                  <LocalizedClientLink
+                                    href={`/products/${item.product_handle}?edit_toppings=true&line_item=${item.id}&redirect_to=cart`}
+                                    onClick={closeCart}
+                                    className="ml-2 text-xs px-2 py-0.5 rounded-md transition-colors bg-gray-200 hover:bg-gray-300 text-gray-700 flex-shrink-0"
+                                  >
+                                    Modifier
+                                  </LocalizedClientLink>
+                                )}
+                              </div>
                               {item.variant && (
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-sm text-gray-500 mt-1 truncate">
                                   {item.variant.options
                                     ?.map((option) => option.value)
                                     .join(", ")}
@@ -540,7 +563,7 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                               />
 
                               <div className="flex justify-between items-center mt-2">
-                                <div className="flex items-center space-x-1">
+                                <div className="flex items-center space-x-1 flex-shrink-0">
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation()
@@ -573,8 +596,8 @@ const Cart = ({ cart: cartState }: { cart?: HttpTypes.StoreCart | null }) => {
                                     <FaPlus size={14} className="text-black" />
                                   </button>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium text-black">
+                                <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                                  <span className="font-medium text-black whitespace-nowrap">
                                     {convertToLocale({
                                       amount: item.total || 0,
                                       currency_code: cartState.currency_code,

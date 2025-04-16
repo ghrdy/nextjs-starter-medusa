@@ -1,6 +1,7 @@
 import { HttpTypes } from "@medusajs/types"
 import { Text } from "@medusajs/ui"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
 type LineItemOptionsProps = {
   variant: HttpTypes.StoreProductVariant | undefined
@@ -23,6 +24,23 @@ const LineItemOptions = ({
 }: LineItemOptionsProps) => {
   // Obtenir les toppings depuis les metadata si disponibles
   const toppings = item?.metadata?.toppings as ToppingMetadata[] | undefined
+  const [isUpdating, setIsUpdating] = useState(false)
+  const lastToppingsRef = useRef<string>(JSON.stringify(toppings || []))
+
+  // Vérifier si les toppings ont changé
+  useEffect(() => {
+    const currentToppingsStr = JSON.stringify(toppings || [])
+    if (currentToppingsStr !== lastToppingsRef.current) {
+      // Afficher brièvement un indicateur de mise à jour
+      setIsUpdating(true)
+      const timer = setTimeout(() => {
+        setIsUpdating(false)
+        lastToppingsRef.current = currentToppingsStr
+      }, 1500)
+
+      return () => clearTimeout(timer)
+    }
+  }, [toppings])
 
   return (
     <div data-testid={dataTestid} data-value={dataValue}>
@@ -33,7 +51,21 @@ const LineItemOptions = ({
       {/* Afficher les toppings s'ils existent */}
       {toppings && toppings.length > 0 && (
         <div className="mt-1">
-          <Text className="txt-small text-ui-fg-subtle">Suppléments :</Text>
+          <div className="flex items-center justify-between">
+            <Text className="txt-small text-ui-fg-subtle">Suppléments :</Text>
+            {item && "product_handle" in item && (
+              <LocalizedClientLink
+                href={`/products/${item.product_handle}?edit_toppings=true&line_item=${item.id}&redirect_to=cart`}
+                className={`ml-2 text-xs px-2 py-0.5 rounded-md transition-colors ${
+                  isUpdating
+                    ? "bg-green-100 text-green-700 animate-pulse"
+                    : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                }`}
+              >
+                {isUpdating ? "Mis à jour..." : "Modifier"}
+              </LocalizedClientLink>
+            )}
+          </div>
           <ul className="pl-2 mt-1">
             {toppings.map((topping, index) => (
               <li
