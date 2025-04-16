@@ -82,7 +82,7 @@ const CompactToppingsInfo = ({
         ))}
       </span>
       <LocalizedClientLink
-        href={`/products/${item.product_handle}?edit_toppings=true&line_item=${item.id}`}
+        href={`/products/${item.product_handle}?edit_toppings=true&line_item=${item.id}&redirect_to=cart`}
         onClick={handleEditToppings}
         className={`ml-auto text-xs px-2 py-0.5 rounded-md transition-colors ${
           isUpdating

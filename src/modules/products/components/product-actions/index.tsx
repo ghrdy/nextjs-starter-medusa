@@ -194,8 +194,20 @@ export default function ProductActions({
         metadata: toppingsData,
       })
 
-      // Rediriger vers la page du panier
-      window.location.href = `/${countryCode}/cart`
+      // Vérifier si une redirection spécifique est demandée
+      const redirectTo = searchParams.get("redirect_to")
+
+      // Remplacer l'entrée actuelle dans l'historique par la page produit sans paramètres
+      // Cela permet d'éviter de revenir à la page d'édition quand on fait retour
+      const productUrl = `/${countryCode}/products/${product.handle}`
+      window.history.replaceState(null, "", productUrl)
+
+      // Rediriger vers la page appropriée
+      if (redirectTo === "cart") {
+        window.location.href = `/${countryCode}/cart`
+      } else {
+        window.location.href = `/${countryCode}/cart`
+      }
     } catch (error) {
       console.error("Error updating cart item:", error)
     } finally {
