@@ -114,15 +114,14 @@ export default function ProductActions({
 
     setIsAdding(true)
 
-    // Préparer les données des toppings pour les metadata
+    // Préparer les données des toppings pour les metadata, sans prix
     const toppingsData =
       selectedToppings.length > 0
         ? {
             toppings: selectedToppings.map((topping) => ({
-              id: topping.variantId,
+              variant_id: topping.variantId,
               quantity: topping.quantity,
-              title: topping.title,
-              price: topping.price,
+              // Ne pas envoyer price et title, Medusa calculera les prix
             })),
           }
         : undefined

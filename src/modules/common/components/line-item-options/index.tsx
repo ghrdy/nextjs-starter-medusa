@@ -1,5 +1,6 @@
 import { HttpTypes } from "@medusajs/types"
 import { Text } from "@medusajs/ui"
+import { useEffect, useState } from "react"
 
 type LineItemOptionsProps = {
   variant: HttpTypes.StoreProductVariant | undefined
@@ -8,12 +9,10 @@ type LineItemOptionsProps = {
   "data-value"?: HttpTypes.StoreProductVariant
 }
 
-// Type pour les toppings stockés dans les metadata
+// Structure minimale des toppings dans les metadata
 type ToppingMetadata = {
-  id: string
+  variant_id: string
   quantity: number
-  title: string
-  price: number
 }
 
 const LineItemOptions = ({
@@ -42,14 +41,14 @@ const LineItemOptions = ({
                 className="txt-small text-ui-fg-subtle flex justify-between"
               >
                 <span>
-                  {topping.quantity}x {topping.title}
+                  {topping.quantity}x{" "}
+                  {
+                    // Le titre doit maintenant être calculé par Medusa
+                    // Si Medusa n'affiche pas cette information, utilisez un texte générique
+                    `Ingrédient ${index + 1}`
+                  }
                 </span>
-                <span className="ml-2">
-                  {new Intl.NumberFormat("fr-FR", {
-                    style: "currency",
-                    currency: "EUR", // Idéalement, cela devrait être dynamique
-                  }).format((topping.price / 100) * topping.quantity)}
-                </span>
+                {/* Les prix sont désormais calculés et gérés par Medusa */}
               </li>
             ))}
           </ul>
