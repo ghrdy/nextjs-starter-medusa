@@ -38,7 +38,7 @@ const NavLinks = () => {
 
         <div className="relative">
           <LocalizedClientLink
-            href="/about"
+            href="/notre-histoire"
             className="text-base font-medium hover:text-black pb-1 inline-block"
           >
             Notre Histoire

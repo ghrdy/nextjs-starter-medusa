@@ -11,10 +11,12 @@ import { HttpTypes } from "@medusajs/types"
 import User from "@modules/common/icons/user"
 
 const SideMenuItems = {
-  Home: "/",
-  Store: "/store",
-  Account: "/account",
-  Cart: "/cart",
+  Accueil: "/",
+  Commander: "/commander",
+  "Notre Histoire": "/notre-histoire",
+  Contact: "/contact",
+  Compte: "/account",
+  Panier: "/cart",
 }
 
 const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
@@ -65,7 +67,7 @@ const SideMenu = ({ regions }: { regions: HttpTypes.StoreRegion[] | null }) => {
                               onClick={close}
                               data-testid={`${name.toLowerCase()}-link`}
                             >
-                              {name === "Account" && <User size={24} />}
+                              {name === "Compte" && <User size={24} />}
                               {name}
                             </LocalizedClientLink>
                           </li>
