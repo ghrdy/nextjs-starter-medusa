@@ -57,23 +57,25 @@ const ContactForm = () => {
   }
 
   return (
-    <div className="w-full bg-white px-8 py-4 rounded-lg shadow-sm border border-ui-border-base">
-      <h2 className="text-2xl-semi mb-6">Contactez-nous</h2>
-      <p className="text-base-regular mb-8">
+    <div className="w-full h-full bg-white px-8 py-6 rounded-lg shadow-sm border border-ui-border-base text-black flex flex-col">
+      <h2 className="text-2xl-semi mb-4 font-semibold text-black">
+        Contactez-nous
+      </h2>
+      <p className="text-base mb-6 text-black">
         Vous avez des questions, des suggestions ou des commentaires ? N'hésitez
         pas à nous contacter en remplissant le formulaire ci-dessous.
       </p>
 
       {submitSuccess ? (
-        <div className="bg-green-50 p-4 rounded-lg mb-6">
+        <div className="bg-green-50 p-4 rounded-lg mb-6 flex-grow">
           <p className="text-green-800">
             Votre message a été envoyé avec succès. Nous vous répondrons dans
             les plus brefs délais.
           </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-grow">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <Input
               label="Nom"
               name="name"
@@ -90,7 +92,7 @@ const ContactForm = () => {
               required
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <Input
               label="Téléphone"
               name="phone"
@@ -106,14 +108,16 @@ const ContactForm = () => {
               required
             />
           </div>
-          <TextArea
-            label="Message"
-            name="message"
-            value={formState.message}
-            onChange={handleInputChange}
-            rows={5}
-            required
-          />
+          <div className="mb-4 flex-grow">
+            <TextArea
+              label="Message"
+              name="message"
+              value={formState.message}
+              onChange={handleInputChange}
+              rows={5}
+              required
+            />
+          </div>
 
           {submitError && (
             <div className="bg-red-50 p-4 rounded-lg mb-4">
@@ -121,8 +125,11 @@ const ContactForm = () => {
             </div>
           )}
 
-          <div className="mt-4">
-            <SubmitButton disabled={isSubmitting} className="w-full">
+          <div className="w-full mt-auto">
+            <SubmitButton
+              className="w-full bg-black text-white hover:bg-gray-800"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? "Envoi en cours..." : "Envoyer le message"}
             </SubmitButton>
           </div>

@@ -54,7 +54,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             "py-2 px-4 w-full border rounded-md text-base-regular transition-colors focus:outline-none resize-none",
             hasError
               ? "border-rose-500"
-              : "border-ui-border-base focus:border-ui-fg-base",
+              : "border-gray-300 focus:border-ui-fg-base",
             className
           )}
           {...props}

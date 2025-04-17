@@ -10,11 +10,11 @@ const RecenterButton = () => {
 
   return (
     <button
-      className="bg-white p-2 rounded-md shadow-md hover:bg-gray-100 transition-colors"
+      className="bg-white p-2 rounded-md shadow-md hover:bg-gray-100 transition-colors text-gray-800"
       title="Recentrer la carte"
       onClick={handleRecenter}
     >
-      <Crosshair size={18} />
+      <Crosshair size={18} className="text-black" />
     </button>
   )
 }

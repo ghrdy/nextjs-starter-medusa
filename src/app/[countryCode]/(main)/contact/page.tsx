@@ -23,10 +23,12 @@ export default function ContactPage() {
       <div className="w-full max-w-5xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="flex flex-col gap-y-3">
-            <div className="bg-white px-6 py-3 rounded-lg shadow-sm border border-ui-border-base">
-              <h2 className="text-xl-semi mb-3">Nos coordonnées</h2>
+            <div className="bg-white px-6 py-3 rounded-lg shadow-sm border border-ui-border-base text-black">
+              <h2 className="text-xl-semi mb-3 font-semibold">
+                Nos coordonnées
+              </h2>
               <div className="flex flex-col gap-y-2">
-                <p className="text-base-regular">
+                <p className="text-base font-normal">
                   <strong>Adresse :</strong>
                   <br />
                   Centre Commercial La Croix Verte
@@ -35,19 +37,22 @@ export default function ContactPage() {
                   <br />
                   Saint-Germain-lès-Corbeil 91250
                 </p>
-                <p className="text-base-regular">
+                <p className="text-base font-normal">
                   <strong>Téléphone :</strong>
                   <br />
-                  <a href="tel:+33169648029" className="hover:text-ui-fg-base">
+                  <a
+                    href="tel:+33169648029"
+                    className="text-black hover:text-amber-600"
+                  >
                     01.69.64.80.29
                   </a>
                 </p>
-                <p className="text-base-regular">
+                <p className="text-base font-normal">
                   <strong>Email :</strong>
                   <br />
                   <a
                     href="mailto:contact@labellavista.fr"
-                    className="hover:text-ui-fg-base"
+                    className="text-black hover:text-amber-600"
                   >
                     contact@labellavista.fr
                   </a>
@@ -62,7 +67,7 @@ export default function ContactPage() {
                   href={googleMapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white px-4 py-2 rounded-md shadow-md flex items-center gap-2 hover:bg-gray-100 transition-colors"
+                  className="bg-white px-4 py-2 rounded-md shadow-md flex items-center gap-2 hover:bg-gray-100 transition-colors text-gray-800"
                 >
                   <MapPin size={18} />
                   <span>Ouvrir dans Google Maps</span>
@@ -70,7 +75,9 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-          <ContactForm />
+          <div className="h-full flex lg:min-h-[550px]">
+            <ContactForm />
+          </div>
         </div>
       </div>
     </div>
