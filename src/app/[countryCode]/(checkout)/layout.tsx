@@ -71,8 +71,8 @@ export default function CheckoutLayout({
                   <Image
                     src="/images/bellavista-logo.png"
                     alt="Bella Vista Restaurant"
-                    width={200}
-                    height={74}
+                    width={180}
+                    height={67}
                     style={{
                       objectFit: "contain",
                       objectPosition: "center",
