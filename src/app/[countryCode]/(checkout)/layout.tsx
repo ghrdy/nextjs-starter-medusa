@@ -28,19 +28,15 @@ export default function CheckoutLayout({
             className="flex-auto flex items-center justify-center"
             data-testid="store-link-mobile"
           >
-            <div
-              className="relative"
-              style={{ width: "260px", height: "65px" }}
-            >
+            <div className="relative">
               <Image
                 src="/images/bellavista-logo.png"
                 alt="Bella Vista Restaurant"
-                fill
+                width={110}
+                height={28}
                 style={{
                   objectFit: "contain",
                   objectPosition: "center",
-                  transform: "scale(1.8)",
-                  top: "1.5px",
                 }}
                 priority
               />
@@ -71,18 +67,15 @@ export default function CheckoutLayout({
                 className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base"
                 data-testid="store-link"
               >
-                <div
-                  className="relative"
-                  style={{ width: "200px", height: "74px" }}
-                >
+                <div className="relative">
                   <Image
                     src="/images/bellavista-logo.png"
                     alt="Bella Vista Restaurant"
-                    fill
+                    width={200}
+                    height={74}
                     style={{
                       objectFit: "contain",
                       objectPosition: "center",
-                      transform: "scale(1.8)",
                     }}
                     priority
                   />

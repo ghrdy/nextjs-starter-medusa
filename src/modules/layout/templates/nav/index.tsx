@@ -29,19 +29,15 @@ export default async function Nav() {
               aria-label="Bella Vista Restaurant"
               data-testid="nav-store-link-mobile"
               className="relative block mx-auto"
-              style={{ width: "260px", height: "65px" }}
             >
               <Image
                 src="/images/bellavista-logo.png"
                 alt="Bella Vista Restaurant"
-                fill
+                width={110}
+                height={28}
                 style={{
                   objectFit: "contain",
                   objectPosition: "center",
-                  transform: "scale(1.8)",
-                  top: "1.5px",
-                  paddingTop: "5px",
-                  paddingBottom: "5px",
                 }}
                 priority
               />
@@ -87,16 +83,15 @@ export default async function Nav() {
                 aria-label="Bella Vista Restaurant"
                 data-testid="nav-store-link"
                 className="relative block mx-auto"
-                style={{ width: "200px", height: "74px" }}
               >
                 <Image
                   src="/images/bellavista-logo.png"
                   alt="Bella Vista Restaurant"
-                  fill
+                  width={200}
+                  height={74}
                   style={{
                     objectFit: "contain",
                     objectPosition: "center",
-                    transform: "scale(1.8)",
                   }}
                   priority
                 />
