@@ -28,12 +28,26 @@ export default async function Home(props: {
     return null
   }
 
+  // Filtrer les collections pour exclure les collections de suppléments/toppings
+  const filteredCollections = collections.filter((collection) => {
+    const handle = collection.handle?.toLowerCase() || ""
+    const title = collection.title?.toLowerCase() || ""
+
+    // Exclure les collections liées aux toppings/suppléments
+    return !(
+      handle.includes("topping") ||
+      handle.includes("supplement") ||
+      title.includes("supplément") ||
+      title.includes("ingrédient")
+    )
+  })
+
   return (
     <>
       <Hero />
       <div className="py-12">
         <ul className="flex flex-col gap-x-6">
-          <FeaturedProducts collections={collections} region={region} />
+          <FeaturedProducts collections={filteredCollections} region={region} />
         </ul>
       </div>
     </>
