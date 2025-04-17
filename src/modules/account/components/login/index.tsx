@@ -17,8 +17,10 @@ const Login = ({ setCurrentView }: Props) => {
       className="max-w-sm w-full flex flex-col items-center mx-auto"
       data-testid="login-page"
     >
-      <h1 className="text-large-semi uppercase mb-6">Bienvenue</h1>
-      <p className="text-center text-base-regular text-ui-fg-base mb-8">
+      <h1 className="text-large-semi uppercase mb-6 text-gray-200">
+        Bienvenue
+      </h1>
+      <p className="text-center text-base-regular text-gray-300 mb-8">
         Connectez vous pour bénéficier de la fidélité
       </p>
       <form className="w-full" action={formAction}>
@@ -42,15 +44,18 @@ const Login = ({ setCurrentView }: Props) => {
           />
         </div>
         <ErrorMessage error={message} data-testid="login-error-message" />
-        <SubmitButton data-testid="sign-in-button" className="w-full mt-6">
+        <SubmitButton
+          data-testid="sign-in-button"
+          className="w-full mt-6 bg-black text-white hover:bg-gray-800"
+        >
           Connexion
         </SubmitButton>
       </form>
-      <span className="text-center text-ui-fg-base text-small-regular mt-6">
+      <span className="text-center text-gray-400 text-small-regular mt-6">
         Pas de compte?{" "}
         <button
           onClick={() => setCurrentView(LOGIN_VIEW.REGISTER)}
-          className="underline"
+          className="underline text-amber-500 hover:text-amber-400"
           data-testid="register-button"
         >
           Créez-en un ici

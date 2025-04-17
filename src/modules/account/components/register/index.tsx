@@ -20,7 +20,7 @@ const Register = ({ setCurrentView }: Props) => {
       className="max-w-sm w-full flex flex-col items-center mx-auto"
       data-testid="register-page"
     >
-      <h1 className="text-large-semi uppercase mb-6">
+      <h1 className="text-large-semi uppercase mb-6 text-gray-200">
         Devenez membre La Bella Vista
       </h1>
 
@@ -65,32 +65,35 @@ const Register = ({ setCurrentView }: Props) => {
           />
         </div>
         <ErrorMessage error={message} data-testid="register-error" />
-        <span className="text-center text-ui-fg-base text-small-regular mt-6">
+        <span className="text-center text-gray-400 text-small-regular mt-6">
           En créant un compte, vous acceptez les{" "}
           <LocalizedClientLink
             href="/content/privacy-policy"
-            className="underline"
+            className="underline text-amber-500 hover:text-amber-400"
           >
             Politique de confidentialité
           </LocalizedClientLink>{" "}
           et{" "}
           <LocalizedClientLink
             href="/content/terms-of-use"
-            className="underline"
+            className="underline text-amber-500 hover:text-amber-400"
           >
             Conditions d'utilisation
           </LocalizedClientLink>
           .
         </span>
-        <SubmitButton className="w-full mt-6" data-testid="register-button">
+        <SubmitButton
+          className="w-full mt-6 bg-black text-white hover:bg-gray-800"
+          data-testid="register-button"
+        >
           Créer un compte
         </SubmitButton>
       </form>
-      <span className="text-center text-ui-fg-base text-small-regular mt-6">
+      <span className="text-center text-gray-400 text-small-regular mt-6">
         Vous avez déjà un compte ?{" "}
         <button
           onClick={() => setCurrentView(LOGIN_VIEW.SIGN_IN)}
-          className="underline"
+          className="underline text-amber-500 hover:text-amber-400"
         >
           Connectez-vous
         </button>
