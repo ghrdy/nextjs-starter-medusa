@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function NotreHistoirePage() {
   return (
     <div className="flex flex-col content-container py-10 max-w-4xl mx-auto bg-zinc-900 text-gray-200 rounded-lg">
-      <h1 className="text-3xl-semi font-bold mb-8 text-center text-amber-500">
+      <h1 className="font-great-vibes text-5xl sm:text-6xl font-normal mb-8 text-center text-amber-500">
         L'Exigence du Goût
       </h1>
 

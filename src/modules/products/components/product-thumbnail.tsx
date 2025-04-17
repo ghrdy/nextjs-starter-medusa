@@ -20,8 +20,8 @@ const ProductThumbnail = ({
       className={clx(
         "relative w-full overflow-hidden p-4 bg-ui-bg-subtle shadow-elevation-card-rest rounded-large group-hover:shadow-elevation-card-hover transition-shadow ease-in-out duration-150",
         {
-          "aspect-[11/12]": isFeatured,
-          "aspect-[9/11]": !isFeatured,
+          "aspect-[4/3]": isFeatured,
+          "aspect-[1/1]": !isFeatured,
         },
         "w-full",
         "group-hover:shadow-lg"

@@ -45,8 +45,8 @@ export default async function Home(props: {
   return (
     <>
       <Hero />
-      <div className="py-12">
-        <ul className="flex flex-col gap-x-6">
+      <div className="py-4">
+        <ul className="flex flex-col gap-y-0">
           <FeaturedProducts collections={filteredCollections} region={region} />
         </ul>
       </div>
