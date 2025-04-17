@@ -26,7 +26,7 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-zinc-900 text-gray-200">
       <CartInitializer />
       <Nav />
       {customer && cart && (
@@ -42,6 +42,6 @@ export default async function PageLayout(props: { children: React.ReactNode }) {
       )}
       {props.children}
       <Footer />
-    </>
+    </div>
   )
 }
