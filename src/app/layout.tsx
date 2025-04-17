@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Bella Vista Restaurant",
   description: "Restaurant italien authentique",
   icons: {
-    icon: "/images/bellavista-logo.png",
+    icon: "/images/icon.png",
   },
 }
 
