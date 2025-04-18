@@ -38,13 +38,20 @@ export default function ContactPage() {
                   Saint-Germain-lès-Corbeil 91250
                 </p>
                 <p className="text-base font-normal">
-                  <strong>Téléphone :</strong>
+                  <strong>Téléphones :</strong>
                   <br />
                   <a
                     href="tel:+33169648029"
                     className="text-black hover:text-amber-600"
                   >
                     01.69.64.80.29
+                  </a>
+                  <br />
+                  <a
+                    href="tel:+33695640085"
+                    className="text-black hover:text-amber-600"
+                  >
+                    06.95.64.00.85
                   </a>
                 </p>
                 <p className="text-base font-normal">
